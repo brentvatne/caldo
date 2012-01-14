@@ -11,14 +11,22 @@ module GoogleCalendar
     end
 
     def find_events_by_date(date)
-      date_to_find = DateTime.parse(date)
-      day_after    = date_to_find + 1
+      date_to_find  = DateTime.parse(date)
+      one_day_later = date_to_find + 1
 
-      api_client.execute(
+      result = api_client.execute(
         :api_method => @calendar_api.events.list,
         :parameters => {'calendarId' => 'primary',
-                        'timeMax' => day_after.to_time.utc.xmlschema,
-                        'timeMin' => date_to_find.to_time.utc.xmlschema })
+                        'timeMax' => one_day_later.to_time.utc.xmlschema,
+                        'timeMin' => date_to_find.to_time.utc.xmlschema }
+        ).data.to_hash["items"]
+
+      return [] if result.nil?
+
+      result.inject([]) do |events, attrs|
+        events << Event.new(attrs)
+      end
     end
+
   end
 end
