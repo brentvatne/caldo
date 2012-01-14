@@ -2,13 +2,22 @@ require_relative 'google_authentication'
 
 class Caldo < Sinatra::Application
   get '/' do
-    result = google_api_client.execute(:api_method => oauth.userinfo.get)
-    status, _, _ = result.response
-    [status, {'Content-Type' => 'application/json'}, result.data.to_json]
-  end
-end
+    events = calendar.find_events_by_date("2012-01-01")
 
-# result = @client.execute(:api_method => @calendar.events.list,
-#                          :parameters => {'calendarId' => 'primary',
-#                                          'timeMax' => Time.parse('2012-01-02').utc.xmlschema,
-#                                          'timeMin' => Time.parse('2012-01-01').utc.xmlschema })
+    body = ""
+    body += events.data.to_json
+    body += events.data.methods.join(" ")
+    body += "<br><br>"
+    body += events.data.to_hash.keys.join(" ")
+    body += "<br><br>"
+    body += events.data.to_hash["items"].inspect
+    body += "<br><br>"
+
+    events.data.to_hash["items"].each do |item|
+      body += item.keys.join(" ") + "<br>"
+    end
+
+    [200, {'Content-Type' => 'text/html'}, body ]
+  end
+
+end

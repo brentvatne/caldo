@@ -1,22 +1,19 @@
 require 'google/api_client'
+require_relative '../models/google_calendar.rb'
 require_relative '../models/token_pair'
 
 class Caldo < Sinatra::Application
-  attr_reader :calendar, :oauth
-
-  def google_api_client
-    @client
-  end
+  attr_reader :calendar
 
   before do
     @client = Google::APIClient.new
     # The client_id and client_secret are application specific codes that any user
     # of this application will need to generate using the google api console
-    @client.authorization.client_id = '329628485114-m68o4644g176qm48vg97q0c5v3tsrqf0.apps.googleusercontent.com'
+    @client.authorization.client_id     = '329628485114-m68o4644g176qm48vg97q0c5v3tsrqf0.apps.googleusercontent.com'
     @client.authorization.client_secret = 'm-h1D1GPMyv08r-zIbj6eBkO'
-    @client.authorization.scope = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email'
-    @client.authorization.redirect_uri = to('/oauth2callback')
-    @client.authorization.code = params[:code] if params[:code]
+    @client.authorization.scope         = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email'
+    @client.authorization.redirect_uri  = to('/oauth2callback')
+    @client.authorization.code          = params[:code] if params[:code]
 
     # Use the existing access token in the session if it's available
     if session[:token_id]
@@ -33,8 +30,10 @@ class Caldo < Sinatra::Application
       @client.authorization.fetch_access_token!
     end
 
-    @calendar = @client.discovered_api('calendar', 'v3')
-    @oauth    = @client.discovered_api('oauth2', 'v2')
+    @calendar_api = @client.discovered_api('calendar', 'v3')
+    @oauth_api    = @client.discovered_api('oauth2', 'v2')
+
+    @calendar = GoogleCalendar::Calendar.new(@client, @calendar_api)
 
     unless @client.authorization.access_token || request.path_info =~ /^\/oauth2/
       redirect to('/oauth2authorize')
