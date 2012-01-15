@@ -7,9 +7,9 @@ describe 'Caldo' do
     Sinatra::Application
   end
 
-  it 'should run a simple test' do
-    get '/'
-    last_response.body.should == "Hello world!"
-    last_response.status.should == 200
+  it 'no tests.. yet' do
+    # get '/'
+    # last_response.body.should   == "some text"
+    # last_response.status.should == 200
   end
 end
