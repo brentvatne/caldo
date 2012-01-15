@@ -1,4 +1,4 @@
-<h1><%= human_date(date) %></h1>
+<h1><%= date.humanize %></h1>
 
 <ul class="events">
   <% events.each do |event| %>
@@ -8,5 +8,5 @@
   <% end %>
 </ul>
 
-<%= link_to " &larr; previous day", prev_date_path(date) %>
-<%= link_to "next day &rarr;", next_date_path(date) %>
+<%= link_to " &larr; previous day", date.prev_date_path %>&nbsp;
+<%= link_to "next day &rarr;", date.next_date_path %>

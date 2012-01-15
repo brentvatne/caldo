@@ -1,4 +1,5 @@
 require 'date'
+require_relative '../presenters/date'
 
 class Caldo < Sinatra::Application
   get '/' do
@@ -10,20 +11,7 @@ class Caldo < Sinatra::Application
     date   = params[:captures].first
     events = calendar.find_events_on_date(date)
 
-    erb :events, :locals => { :events => events, :date => date }
-  end
-
-  helpers do
-    def human_date(date)
-      DateTime.parse(date).strftime("%A, %B %d")
-    end
-
-    def next_date_path(date)
-      "/" + (DateTime.parse(date) + 1).to_date.to_s
-    end
-
-    def prev_date_path(date)
-      "/" + (DateTime.parse(date) - 1).to_date.to_s
-    end
+    erb :events, :locals => { :events => events,
+                              :date => DatePresenter.new(date) }
   end
 end
