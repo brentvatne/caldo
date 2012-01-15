@@ -1,6 +1,4 @@
-require 'data_mapper'
-
-DataMapper.setup(:default, 'sqlite::memory:')
+require Caldo::CONFIG_PATH + "/data_mapper"
 
 module Caldo
   class TokenPair
@@ -26,6 +24,6 @@ module Caldo
         :issued_at     => Time.at(issued_at) }
     end
   end
-
-  TokenPair.auto_migrate!
 end
+
+DataMapper.finalize

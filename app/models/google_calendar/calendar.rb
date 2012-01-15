@@ -24,9 +24,7 @@ module Caldo
 
         return [] if result.nil?
 
-        result.inject([]) do |events, attrs|
-          events << Event.new(attrs)
-        end
+        result.inject([]) { |events, attrs| events << Event.new(attrs) }
       end
     end
   end
