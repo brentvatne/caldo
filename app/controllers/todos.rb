@@ -12,8 +12,8 @@ module Caldo
       date   = params[:captures].first
       events = calendar.find_events_on_date(date)
 
-      erb :events, :locals => { :events => events,
-                                :date => DatePresenter.new(date) }
+      erb :todos, :locals => { :events => events,
+                               :date => DatePresenter.new(date) }
     end
   end
 end
