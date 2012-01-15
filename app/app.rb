@@ -6,8 +6,8 @@ module Caldo
     enable :sessions
 
     set :app_root,      File.dirname(__FILE__)
-    set :config_path,   File.join(settings.app_root, "../config/")
-    set :client_id,     ENV["CALDO_GOOGLE_API_CLIENT_ID"]
-    set :client_secret, ENV["CALDO_GOOGLE_API_CLIENT_SECRET"]
+    set :config_path,   File.join(settings.app_root, '../config/')
+    set :client_id,     ENV['CALDO_GOOGLE_API_CLIENT_ID']
+    set :client_secret, ENV['CALDO_GOOGLE_API_CLIENT_SECRET']
   end
 end
