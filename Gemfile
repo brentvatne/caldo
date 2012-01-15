@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem "sinatra"
+gem "ratpack"
 gem "google-api-client"
 gem "dm-sqlite-adapter"
 gem "datamapper"

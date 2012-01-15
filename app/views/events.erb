@@ -1,0 +1,13 @@
+<h1><%= human_date(date) %></h1>
+
+<ul class="events">
+  <% events.each do |event| %>
+    <li class="event">
+      <strong class="event-summary"><%= event.summary %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to " &larr; previous day", prev_date_path(date) %>
+<%= link_to "next day &rarr;", next_date_path(date) %>
+

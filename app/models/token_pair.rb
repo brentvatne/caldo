@@ -1,7 +1,7 @@
 require 'data_mapper'
 
-# Set up our token store
 DataMapper.setup(:default, 'sqlite::memory:')
+
 class TokenPair
   include DataMapper::Resource
 
