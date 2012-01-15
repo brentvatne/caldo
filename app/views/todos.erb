@@ -1,12 +1,16 @@
 <h1><%= date.humanize %></h1>
 
-<ul class="events">
-  <% events.each do |event| %>
-    <li class="event">
-      <strong class="event-summary"><%= event.summary %>
-    </li>
-  <% end %>
-</ul>
+<% if events.length.zero? %>
+  <p>Nothing to do today..</p>
+<% else %>
+  <ul class="events">
+    <% events.each do |event| %>
+      <li class="event">
+        <strong class="event-summary"><%= event.summary %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
 
 <%= link_to " &larr; previous day", date.prev_date_path %>&nbsp;
 <%= link_to "next day &rarr;", date.next_date_path %>
