@@ -3,7 +3,7 @@ require 'date'
 module Caldo
   class DatePresenter
     def initialize(date)
-      @date = DateTime.parse(date)
+      @date = DateTime.parse(date.to_s)
     end
 
     def humanize
