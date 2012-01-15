@@ -10,7 +10,7 @@ module GoogleCalendar
       @calendar_api = calendar_api
     end
 
-    def find_events_by_date(date)
+    def find_events_on_date(date)
       date_to_find  = DateTime.parse(date)
       one_day_later = date_to_find + 1
 

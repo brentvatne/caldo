@@ -1,5 +1,5 @@
 require 'google/api_client'
-require_relative '../models/google_calendar.rb'
+require_relative '../models/google_calendar/google_calendar'
 require_relative '../models/token_pair'
 
 class Caldo < Sinatra::Application

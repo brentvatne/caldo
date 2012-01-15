@@ -7,8 +7,8 @@ class Caldo < Sinatra::Application
 
   # Matches the route /2012-01-14
   get %r{(\d{4}-\d{2}-\d{2})} do
-    date       = params[:captures].first
-    events     = calendar.find_events_by_date(date)
+    date   = params[:captures].first
+    events = calendar.find_events_on_date(date)
 
     erb :events, :locals => { :events => events, :date => date }
   end
