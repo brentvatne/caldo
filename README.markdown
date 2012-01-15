@@ -9,8 +9,10 @@
 3. Navigate to `http://localhost:4567/`
 
 ## Elevator pitch please
-The vision: Caldo is short for Calendar do. It turns your Google Calendar events into todo-lists. Upon marking them as complete, the event will be immediately
-updated in Google calendar to visually reflect the change.
+The vision: Caldo is short for Calendar do, and it means soup in Spanish. It
+turns your Google Calendar events into todo-lists. Upon marking them as
+complete, the event will be immediately updated in Google calendar to
+visually reflect the change.
 
 ## What does it *currently* do?
 
