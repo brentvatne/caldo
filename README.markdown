@@ -48,6 +48,8 @@ RMU course, afterwards I would like to continue adding the following
 features:
 
 - Customize event colors so everything isn't necessarily green.
+- Choose the calendar you want to use (currently defaults to your
+	primary calendar)
 - iPhone friendly layout
 
 ## Run the tests
