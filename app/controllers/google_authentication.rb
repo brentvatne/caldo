@@ -9,11 +9,10 @@ module Caldo
 
     before do
       @client = Google::APIClient.new
-      api_config = YAML.load_file(CONFIG_PATH + "/google_api.yaml")
       # The client_id and client_secret are application specific codes that any user
       # of this application will need to generate using the google api console
-      @client.authorization.client_id     = api_config["client_id"]
-      @client.authorization.client_secret = api_config["client_secret"]
+      @client.authorization.client_id     = settings.client_id
+      @client.authorization.client_secret = settings.client_secret
       @client.authorization.scope         = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email'
       @client.authorization.redirect_uri  = to('/oauth2callback')
       @client.authorization.code          = params[:code] if params[:code]

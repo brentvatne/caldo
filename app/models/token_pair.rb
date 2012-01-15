@@ -1,4 +1,4 @@
-require Caldo::CONFIG_PATH + "/data_mapper"
+require Caldo::App.settings.config_path + "/data_mapper"
 
 module Caldo
   class TokenPair
@@ -27,3 +27,4 @@ module Caldo
 end
 
 DataMapper.finalize
+DataMapper.auto_upgrade!
