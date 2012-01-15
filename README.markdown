@@ -5,7 +5,7 @@
 ## Use it
 1. Install dependencies: `bundle install`. Ensure you have a sqlite
 	 library installed that is compatible with DataMapper.
-2. `ruby app/bootstrap.rb`
+2. `rake server`
 3. Navigate to `http://localhost:4567/`
 
 ## Elevator pitch please
@@ -55,4 +55,3 @@ features:
 ## Run the tests
 Uses Rspec, to run the suite: `bundle install && rake`
 *Tested with: Ruby 1.9.3p0*
-
