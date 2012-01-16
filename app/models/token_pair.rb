@@ -10,6 +10,10 @@ module Caldo
     property :expires_in, Integer
     property :issued_at, Integer
 
+    def initialize(attrs)
+      update_token!(attrs)
+    end
+
     def update_token!(object)
       self.refresh_token = object.refresh_token
       self.access_token  = object.access_token
