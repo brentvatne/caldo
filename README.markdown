@@ -13,8 +13,6 @@
 3. `rake server`
 4. Navigate to `http://localhost:4567/`
 
-Alternatively, a demo is available at [http://caldo.heroku.com/](http://caldo.heroku.com/)
-
 ## Elevator pitch please
 The vision: Caldo is short for Calendar do, and it means soup in Spanish. It
 turns your Google Calendar events into todo-lists. Upon marking them as
