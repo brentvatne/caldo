@@ -36,7 +36,7 @@ module Caldo
     end
 
     get '/oauth2authorize' do
-      redirect @client.authorization.authorization_uri.to_s, 303
+      redirect enable_auto_approval(@client.authorization.authorization_uri.to_s), 303
     end
 
     # This should only be reached after the client gives permissions
@@ -55,6 +55,10 @@ module Caldo
     end
 
     private
+    def enable_auto_approval(path)
+      path.gsub("&approval_prompt=force","")
+    end
+
     def initialize_api_client
       client = Google::APIClient.new
       client.authorization.client_id     = settings.client_id
