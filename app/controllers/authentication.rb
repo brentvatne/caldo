@@ -1,15 +1,34 @@
-require_relative '../models/google_calendar/google_calendar'
+require_relative '../app'
 require_relative '../models/google_calendar/client'
+require_relative '../models/google_calendar/calendar'
 require_relative '../models/token_pair'
 
 module Caldo
   class App < Sinatra::Application
+    get '/oauth2callback' do
+      initialize_api_client
 
-    before do
+      client.fetch_access_token
+      token_pair = TokenPair.new(client.authorization_details)
+      token_pair.save
+      session[:token_pair_id] = token_pair.id
+
+      redirect to(client.path_before_signing_in)
+    end
+
+    get '/sign_out' do
+      session[:token_pair_id] = nil
+    end
+
+    private
+    attr_accessor :client, :calendar
+
+    def initialize_api_client
       self.client = GoogleCalendar::Client.new(
                       :client_id     => settings.client_id,
                       :client_secret => settings.client_secret,
                       :token_pair    => session_token_pair,
+                      :state         => params[:state] || request.path_info,
                       :redirect_uri  => to('/oauth2callback'),
                       :code          => params[:code])
 
@@ -20,23 +39,7 @@ module Caldo
       end
     end
 
-    # This should only be reached after the client gives permissions
-    get '/oauth2callback' do
-      client.fetch_access_token!
-      token_pair = TokenPair.new(client.authorization_details)
-      token_pair.save
-      session[:token_pair_id] = token_pair.id
-
-      redirect to('/')
-    end
-
-    get '/sign_out' do
-      session[:token_pair_id] = nil
-      "Signed out!"
-    end
-
-    private
-    attr_accessor :client, :calendar
+    alias_method :require_authentication!, :initialize_api_client
 
     def authorization_in_progress?
       request.path_info =~ /^\/oauth2/

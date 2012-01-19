@@ -1,3 +1,5 @@
+require_relative 'event'
+
 module Caldo
   module GoogleCalendar
     class Calendar

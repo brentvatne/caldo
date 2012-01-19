@@ -15,6 +15,7 @@ module Caldo
         self.redirect_uri  = params[:redirect_uri]
         self.code          = params[:code]
         self.token_pair    = params[:token_pair]
+        self.state         = params[:state]
       end
 
       def events(params)
@@ -25,6 +26,10 @@ module Caldo
 
       def authorization_details
         delegate.authorization
+      end
+
+      def path_before_signing_in
+        delegate.authorization.state
       end
 
       def authorization_uri
@@ -39,7 +44,7 @@ module Caldo
         delegate.authorization.access_token
       end
 
-      def fetch_access_token!
+      def fetch_access_token
         delegate.authorization.fetch_access_token!
       end
 
@@ -70,6 +75,10 @@ module Caldo
         delegate.authorization.code = new_code if new_code
       end
 
+      def state=(new_state)
+        delegate.authorization.state = new_state
+      end
+
       def token_pair=(new_token_pair)
         if new_token_pair
           delegate.authorization.update_token!(new_token_pair.to_hash)
@@ -79,7 +88,7 @@ module Caldo
 
       def fetch_new_token_if_needed
         if delegate.authorization.refresh_token && delegate.authorization.expired?
-          self.fetch_access_token!
+          self.fetch_access_token
         end
       end
 
