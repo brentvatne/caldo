@@ -1,76 +1,49 @@
-require 'google/api_client'
 require_relative '../models/google_calendar/google_calendar'
+require_relative '../models/google_calendar/client'
 require_relative '../models/token_pair'
 
 module Caldo
   class App < Sinatra::Application
-    attr_reader :calendar
 
-    before %r{/(\d{4}-\d{2}-\d{2})?} do
-      @client = initialize_api_client
+    before do
+      self.client = GoogleCalendar::Client.new(
+                      :client_id     => settings.client_id,
+                      :client_secret => settings.client_secret,
+                      :token_pair    => session_token_pair,
+                      :redirect_uri  => to('/oauth2callback'),
+                      :code          => params[:code])
 
-      # Need some other way to remember the user, by a username I create for example
-      if token = find_saved_token_by_session
-        @client.authorization.update_token!(token.to_hash)
-
-        # It is considered a "TokenPair" because there are two tokens: the access token
-        # and the refresh token. The access token has a relatively short life to protect
-        # against it getting stolen, and the refresh token allows us to grab
-        # another access token if the authorization has expired.
-        #
-        # The question now is if there is some way to identify the user before I redirect
-        # them to the authorization url, so I can just get the access token?
-        if @client.authorization.refresh_token && @client.authorization.expired?
-          @client.authorization.fetch_access_token!
-        end
+      if client.has_access_token?
+        self.calendar = GoogleCalendar::Calendar.new(client)
+      else
+        redirect client.authorization_uri, 303 unless authorization_in_progress?
       end
-
-      @calendar_api = @client.discovered_api('calendar', 'v3')
-      @oauth_api    = @client.discovered_api('oauth2', 'v2')
-
-      @calendar = GoogleCalendar::Calendar.new(@client, @calendar_api)
-
-      unless @client.authorization.access_token || request.path_info =~ /^\/oauth2/
-        redirect to('/oauth2authorize')
-      end
-    end
-
-    get '/oauth2authorize' do
-      redirect enable_auto_approval(@client.authorization.authorization_uri.to_s), 303
     end
 
     # This should only be reached after the client gives permissions
     get '/oauth2callback' do
-      @client.authorization.fetch_access_token!
-      token_pair = TokenPair.new(@client.authorization)
-
+      client.fetch_access_token!
+      token_pair = TokenPair.new(client.authorization_details)
       token_pair.save
-      session[:token_id] = token_pair.id
+      session[:token_pair_id] = token_pair.id
 
       redirect to('/')
     end
 
     get '/sign_out' do
-      session[:token_id] = nil
+      session[:token_pair_id] = nil
+      "Signed out!"
     end
 
     private
-    def enable_auto_approval(path)
-      path.gsub("&approval_prompt=force","")
+    attr_accessor :client, :calendar
+
+    def authorization_in_progress?
+      request.path_info =~ /^\/oauth2/
     end
 
-    def initialize_api_client
-      client = Google::APIClient.new
-      client.authorization.client_id     = settings.client_id
-      client.authorization.client_secret = settings.client_secret
-      client.authorization.scope         = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email'
-      client.authorization.redirect_uri  = to('/oauth2callback')
-      client.authorization.code          = params[:code] if params[:code]
-      client
-    end
-
-    def find_saved_token_by_session
-      TokenPair.get(session[:token_id]) unless session[:token_id].nil?
+    def session_token_pair
+      TokenPair.get(session[:token_pair_id]) unless session[:token_pair_id].nil?
     end
   end
 end

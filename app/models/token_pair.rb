@@ -1,6 +1,11 @@
 require Caldo::App.settings.config_path + "/data_mapper"
 
 module Caldo
+
+  # It is considered a "TokenPair" because there are two tokens: the access token
+  # and the refresh token. The access token has a relatively short life to protect
+  # against it getting stolen, and the refresh token allows us to grab
+  # another access token if the authorization has expired.
   class TokenPair
     include DataMapper::Resource
 
