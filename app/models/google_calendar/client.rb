@@ -33,6 +33,18 @@ module Caldo
       end
 
       def authorization_uri
+        if access_token? && !refresh_token?
+          forced_authorization_uri
+        else
+          auto_approval_uri
+        end
+      end
+
+      def forced_authorization_uri
+        authorization_details.authorization_uri.to_s
+      end
+
+      def auto_approval_uri
         enable_auto_approval(authorization_details.authorization_uri.to_s)
       end
 
@@ -40,7 +52,11 @@ module Caldo
         date.to_time.utc.xmlschema
       end
 
-      def has_access_token?
+      def has_valid_access_token?
+        access_token? && !delegate.authorization.expired?
+      end
+
+      def access_token?
         delegate.authorization.access_token
       end
 
@@ -82,14 +98,15 @@ module Caldo
       def token_pair=(new_token_pair)
         if new_token_pair
           delegate.authorization.update_token!(new_token_pair.to_hash)
-          fetch_new_token_if_needed
+
+          if refresh_token? && delegate.authorization.expired?
+            delegate.authorization.fetch_access_token!
+          end
         end
       end
 
-      def fetch_new_token_if_needed
-        if delegate.authorization.refresh_token && delegate.authorization.expired?
-          self.fetch_access_token
-        end
+      def refresh_token?
+        delegate.authorization.refresh_token
       end
 
       def enable_auto_approval(path)

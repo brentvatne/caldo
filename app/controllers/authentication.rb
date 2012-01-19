@@ -7,10 +7,9 @@ module Caldo
   class App < Sinatra::Application
     get '/oauth2callback' do
       initialize_api_client
-
       client.fetch_access_token
-      token_pair = TokenPair.new(client.authorization_details)
-      token_pair.save
+
+      token_pair = TokenPair.create(client.authorization_details)
       session[:token_pair_id] = token_pair.id
 
       redirect to(client.path_before_signing_in)
@@ -32,21 +31,21 @@ module Caldo
                       :redirect_uri  => to('/oauth2callback'),
                       :code          => params[:code])
 
-      if client.has_access_token?
+      if client.has_valid_access_token?
         self.calendar = GoogleCalendar::Calendar.new(client)
       else
         redirect client.authorization_uri, 303 unless authorization_in_progress?
       end
     end
 
-    alias_method :require_authentication!, :initialize_api_client
-
-    def authorization_in_progress?
-      request.path_info =~ /^\/oauth2/
-    end
+    alias_method :require_authentication, :initialize_api_client
 
     def session_token_pair
       TokenPair.get(session[:token_pair_id]) unless session[:token_pair_id].nil?
+    end
+
+    def authorization_in_progress?
+      request.path_info =~ /^\/oauth2/
     end
   end
 end

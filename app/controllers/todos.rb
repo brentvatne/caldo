@@ -9,7 +9,7 @@ module Caldo
 
     # Matches the route /2012-01-14
     get %r{(\d{4}-\d{2}-\d{2})} do
-      require_authentication!
+      require_authentication
 
       date   = params[:captures].first
       events = calendar.find_events_on_date(date)

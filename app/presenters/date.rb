@@ -23,7 +23,6 @@ module Caldo
     end
 
     private
-
     def date_path(date)
       "/" + date.to_date.to_s
     end

@@ -1,4 +1,4 @@
-require Caldo::App.settings.config_path + "/data_mapper"
+require_relative "../../config/data_mapper"
 
 module Caldo
 
@@ -20,7 +20,7 @@ module Caldo
     end
 
     def update_token!(object)
-      self.refresh_token = object.refresh_token
+      self.refresh_token = object.refresh_token || self.refresh_token
       self.access_token  = object.access_token
       self.expires_in    = object.expires_in
       self.issued_at     = object.issued_at
