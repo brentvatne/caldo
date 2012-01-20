@@ -38,7 +38,9 @@ module Caldo
       end
     end
 
-    alias_method :require_authentication, :initialize_api_client
+    set(:requires_authentication) do |required|
+      condition { initialize_api_client if required }
+    end
 
     def session_token_pair
       TokenPair.get(session[:token_pair_id]) unless session[:token_pair_id].nil?
