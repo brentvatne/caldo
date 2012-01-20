@@ -9,3 +9,4 @@ doc/
 .project
 .DS_Store
 db/app.db
+.sass-cache/
