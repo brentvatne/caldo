@@ -17,6 +17,7 @@ module Caldo
 
     get '/sign_out' do
       session[:token_pair_id] = nil
+      redirect to('/')
     end
 
     private

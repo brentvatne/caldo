@@ -13,7 +13,7 @@ module Caldo
     set :config_path,   File.join(settings.app_root, '../config/')
     set :scss_dir,      'assets/stylesheets'
 
-    get '/assets/:file.css' do
+    get '/public/stylesheets/:file.css' do
       template = params[:file]
       if stylesheet_exists?(template)
         scss :"../#{settings.scss_dir}/#{template}"

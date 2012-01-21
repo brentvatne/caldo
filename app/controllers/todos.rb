@@ -4,7 +4,13 @@ require_relative '../presenters/date'
 module Caldo
   class App < Sinatra::Application
     get '/' do
-      'unauthenticated page'
+      erb :unauthenticated
+    end
+
+    get '/today' do
+      require_authentication
+
+      redirect to("/#{Date.today.to_s}")
     end
 
     # Matches the route /2012-01-14

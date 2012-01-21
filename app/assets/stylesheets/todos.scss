@@ -1,4 +1,45 @@
-html {
-  body {
+@import 'reset.scss';
+@import 'typography.scss';
+@import 'github_buttons.scss';
+
+body {
+  h1 {
+    font-weight: 700;
+  }
+  ul {
+    list-style-type: none;
+  }
+}
+
+.content-container {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.control-bar {
+  text-align: right;
+}
+
+.todos {
+  text-align: center;
+  .events {
+    width: 350px;
+    display: inline-block;
+    .event {
+      text-align: left;
+    }
+  }
+
+  .days-navigator {
+    position: relative;
+
+    .previous-day {
+      position: absolute;
+      left: 0px;
+    }
+    .next-day {
+      position: absolute;
+      right: 0px;
+    }
   }
 }

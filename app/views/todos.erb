@@ -1,16 +1,26 @@
-<h1><%= date.humanize %></h1>
+<section class="control-bar">
+  <nav class="button-group">
+      <a href="/sign_out" class="button">Sign out</a>
+  </nav>
+</section>
 
-<% if events.length.zero? %>
-  <p>Nothing to do today..</p>
-<% else %>
-  <ul class="events">
-    <% events.each do |event| %>
-      <li class="event">
-        <strong class="event-summary"><%= event.summary %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
+<section class="todos">
+  <h1><%= date.humanize %></h1>
 
-<%= link_to " &larr; previous day", date.prev_date_path %>&nbsp;
-<%= link_to "next day &rarr;", date.next_date_path %>
+  <% if events.length.zero? %>
+    <p>Nothing to do today..</p>
+  <% else %>
+    <ul class="events">
+      <% events.each do |event| %>
+        <li class="event">
+          <strong class="event-summary"><%= event.summary %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <nav class="days-navigator">
+    <%= link_to " &larr; previous day", date.prev_date_path, :class => "previous-day" %>
+    <%= link_to "next day &rarr;", date.next_date_path, :class => "next-day" %>
+  </nav>
+</todos>
