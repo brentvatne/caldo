@@ -2,8 +2,13 @@ source "http://rubygems.org"
 
 # Sinatra and related gems
 gem 'sinatra', '~> 1.3.2'
+gem 'rack'
 gem 'shotgun', '~> 0.9'
 gem 'ratpack', '~> 0.1.3'
+gem 'sinatra-flash'
+
+# Assets
+gem 'sass', '~> 3.1.11'
 
 # Development utilities
 gem 'rake', '~> 0.9.2.2'

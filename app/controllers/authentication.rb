@@ -12,11 +12,14 @@ module Caldo
       token_pair = TokenPair.create(client.authorization_details)
       session[:token_pair_id] = token_pair.id
 
+      flash[:success] = "Sign in was successful, well done!"
       redirect to(client.path_before_signing_in)
     end
 
     get '/sign_out' do
       session[:token_pair_id] = nil
+      flash[:notice] = "You have been signed out! See you again soon."
+      redirect to('/')
     end
 
     private
@@ -36,6 +39,7 @@ module Caldo
       else
         redirect client.authorization_uri, 303 unless authorization_in_progress?
       end
+
     end
 
     set(:requires_authentication) do |required|

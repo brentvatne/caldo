@@ -28,6 +28,7 @@ module Caldo
         delegate.authorization
       end
 
+      # This is the url that was requested before redirecting to authorization
       def path_before_signing_in
         delegate.authorization.state
       end
