@@ -1,0 +1,72 @@
+@import 'reset.scss';
+@import 'typography.scss';
+@import 'github_buttons.scss';
+@import 'notifications.scss';
+
+body {
+  h1 {
+    font-weight: 700;
+  }
+  ul {
+    list-style-type: none;
+  }
+
+  a, a:link, a:visited {
+    color: #0e7cc9;
+    -webkit-transition: color 1s linear;
+    -moz-transition: color 1s linear;
+    -o-transition: color 1s linear;
+    transition: color 1s linear;
+
+    &:hover {
+      color: #011e37;
+    }
+  }
+}
+
+.content-container {
+  width: 400px;
+  margin: 0 auto;
+  .minor-group {
+    .button {
+      border: none;
+    }
+  }
+}
+
+.control-bar {
+  padding-top: 10px;
+  text-align: right;
+  a, a:link, a:visited {
+    color: #383838;
+    text-decoration: none;
+  }
+  a:hover {
+    color: #CCC;
+  }
+}
+
+.todos {
+  text-align: center;
+  .events {
+    width: 350px;
+    display: inline-block;
+    .event {
+      text-align: left;
+    }
+  }
+
+  .days-navigator {
+    position: relative;
+
+    .previous-day {
+      position: absolute;
+      left: 0px;
+    }
+    .next-day {
+      position: absolute;
+      right: 0px;
+    }
+  }
+}
+
