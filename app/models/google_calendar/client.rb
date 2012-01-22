@@ -8,8 +8,6 @@ module Caldo
     class Client
       include EventInterface
 
-      attr_reader :token_pair
-
       def initialize(params)
         self.delegate      = Google::APIClient.new
         self.client_id     = params[:client_id]
@@ -58,6 +56,20 @@ module Caldo
         delegate.authorization.fetch_access_token!
       end
 
+      def token_pair=(new_token_pair)
+        if new_token_pair
+          delegate.authorization.update_token!(new_token_pair.to_hash)
+
+          if refresh_token? && delegate.authorization.expired?
+            delegate.authorization.fetch_access_token!
+          end
+        end
+      end
+
+      def token_pair
+        delegate.authorization
+      end
+
       private
       attr_accessor :delegate
 
@@ -83,16 +95,6 @@ module Caldo
 
       def state=(new_state)
         delegate.authorization.state = new_state
-      end
-
-      def token_pair=(new_token_pair)
-        if new_token_pair
-          delegate.authorization.update_token!(new_token_pair.to_hash)
-
-          if refresh_token? && delegate.authorization.expired?
-            delegate.authorization.fetch_access_token!
-          end
-        end
       end
 
       def refresh_token?

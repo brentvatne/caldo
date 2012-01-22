@@ -19,10 +19,10 @@ module Caldo
     def initialize(attrs)
       if (attrs.kind_of?(Hash))
         new_object = OpenStruct.new
-        new_object.refresh_token = attrs[:refresh_token]
-        new_object.access_token  = attrs[:access_token]
-        new_object.expires_in    = attrs[:expires_in]
-        new_object.issued_at     = attrs[:issued_at]
+        new_object.refresh_token = attrs[:refresh_token] || attrs['refresh_token']
+        new_object.access_token  = attrs[:access_token]  || attrs['access_token']
+        new_object.expires_in    = attrs[:expires_in]    || attrs['expires_in']
+        new_object.issued_at     = attrs[:issued_at]     || attrs['issued_at']
         attrs = new_object
       end
       update_token!(attrs)

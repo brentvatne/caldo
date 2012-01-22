@@ -26,6 +26,7 @@ module Caldo
     attr_accessor :client, :calendar
 
     def initialize_api_client
+      # this is a good opportunity to use a DSL to create it
       self.client = GoogleCalendar::Client.new(
                       :client_id     => settings.client_id,
                       :client_secret => settings.client_secret,

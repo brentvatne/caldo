@@ -22,7 +22,5 @@ group :test do
   gem 'capybara', '~> 1.1.2'
   gem 'rack-test', '~> 0.6.1'
   gem 'timecop', '~> 0.3.5'
-  gem 'vcr', '~> 1.11.3'
-  gem 'fakeweb', '~> 1.3.0'
 end
 

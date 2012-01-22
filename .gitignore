@@ -11,4 +11,4 @@ doc/
 db/app.db
 .sass-cache/
 .rvmrc
-spec/config/api_access.rb
+spec/config/api_access.yaml

@@ -1,0 +1,10 @@
+---
+api_client_id:
+api_client_secret:
+test_account:
+test_password:
+token:
+  refresh_token:
+  access_token:
+  expires_in:
+  issued_at:
