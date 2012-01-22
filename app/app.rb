@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/ratpack'
+require 'sinatra/flash'
 require 'sass'
 
 module Caldo

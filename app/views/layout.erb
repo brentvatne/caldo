@@ -17,6 +17,14 @@
 </head>
 
 <body>
+  <% flash.each do |key, value| %>
+    <% unless value.nil? %>
+      <div class="notification <%= key %>">
+        <p class="message"><%= value %></p>
+      </div>
+    <% end %>
+  <% end %>
+
   <div class="content-container">
     <%= yield  %>
   </div>
