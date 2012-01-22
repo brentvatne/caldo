@@ -39,7 +39,6 @@ module Caldo
       else
         redirect client.authorization_uri, 303 unless authorization_in_progress?
       end
-
     end
 
     set(:requires_authentication) do |required|

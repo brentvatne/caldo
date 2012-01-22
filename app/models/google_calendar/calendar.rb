@@ -10,12 +10,13 @@ module Caldo
       end
 
       def find_events_on_date(date)
-        date_to_find  = DateTime.parse(date)
+        date          = DateTime.parse(date)
+        date_to_find  = DateTime.new(date.year,date.month,date.day,0,0,0,'-8')
         one_day_later = date_to_find + 1
 
         result = client.events({
-          'timeMax' => client.format_date(one_day_later),
-          'timeMin' => client.format_date(date_to_find)
+          'timeMin' => client.format_date(date_to_find),
+          'timeMax' => client.format_date(one_day_later)
         })
 
         return [] if result.nil?

@@ -1,0 +1,13 @@
+module Caldo
+  API_CLIENT_ID     = 'client id'
+  API_CLIENT_SECRET = 'client secret'
+  TEST_ACCOUNT      = 'sample gmail account'
+  TEST_PASSWORD     = 'sample gmail password'
+
+	# You will need to give the app authorization with your client information
+	# above, then record the following information:
+  REFRESH_TOKEN     = 'a refresh token'
+  ACCESS_TOKEN      = 'corresponding access token'
+  EXPIRES_IN        = 0						# Example: 3600
+  ISSUED_AT         = 1111111111  # Example: 1327216190
+end

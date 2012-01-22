@@ -1,10 +1,13 @@
 require 'google/api_client'
+require_relative 'client/event_interface'
 require 'date'
 require 'time'
 
 module Caldo
   module GoogleCalendar
     class Client
+      include EventInterface
+
       attr_reader :token_pair
 
       def initialize(params)
@@ -16,12 +19,6 @@ module Caldo
         self.code          = params[:code]
         self.token_pair    = params[:token_pair]
         self.state         = params[:state]
-      end
-
-      def events(params)
-        params.merge!('calendarId' => 'primary')
-        delegate.execute(:api_method => calendar_api.events.list,
-                         :parameters => params).data.to_hash["items"]
       end
 
       def authorization_details
@@ -49,10 +46,6 @@ module Caldo
         enable_auto_approval(authorization_details.authorization_uri.to_s)
       end
 
-      def format_date(date)
-        date.to_time.utc.xmlschema
-      end
-
       def has_valid_access_token?
         access_token? && !delegate.authorization.expired?
       end
@@ -67,10 +60,6 @@ module Caldo
 
       private
       attr_accessor :delegate
-
-      def calendar_api
-        @calendar_api ||= delegate.discovered_api('calendar', 'v3')
-      end
 
       def client_id=(new_client_id)
         delegate.authorization.client_id = new_client_id

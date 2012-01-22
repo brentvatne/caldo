@@ -1,25 +1,28 @@
-require_relative '../app/app'
-require_relative '../app/models/google_calendar/google_calendar'
+require_relative 'config/monkeypatch_auth'
 require 'rack/test'
 require 'rspec'
+require 'timecop'
 
-set :environment, :test
+require 'vcr'
+require 'fakeweb'
+
+Timecop.travel(Time.new(2012,1,15,15,25,0, "-08:00"))
 
 RSpec.configure do |config|
   config.mock_with :rspec
+  config.before(:each) do
+  end
 end
 
-def event(summary, description="")
-  Caldo::GoogleCalendar::Event.new("summary" => summary,
-                                   "description" => description)
+VCR.config do |c|
+  c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
+  c.stub_with :fakeweb
 end
 
-class FakeCalendar
-  def initialize(events)
-    @events = events
-  end
+def test_account
+  CaldoSpecs::TEST_ACCOUNT
+end
 
-  def find_events_on_date(date)
-    @events
-  end
+def test_password
+  CaldoSpecs::TEST_PASSWORD
 end

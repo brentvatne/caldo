@@ -11,7 +11,10 @@
     <ul class="events">
       <% events.each do |event| %>
         <li class="event">
-          <strong class="event-summary"><%= event.summary %>
+					<input type="checkbox" id="task-1" />
+					<label for="task-1">
+						<strong class="event-summary"><%= event.summary %>
+					</label>
         </li>
       <% end %>
     </ul>
