@@ -7,9 +7,7 @@ module Caldo
       erb :unauthenticated
     end
 
-    get '/today' do
-      require_authentication
-
+    get '/today', :requires_authentication => true do
       redirect to("/#{Date.today.to_s}")
     end
 
