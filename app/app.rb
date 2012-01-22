@@ -4,15 +4,15 @@ require 'sass'
 
 module Caldo
   class App < Sinatra::Application
-    set :root, File.dirname(__FILE__)
     enable :sessions
-    enable :static
 
     set :client_id,     ENV['CALDO_GOOGLE_API_CLIENT_ID']
     set :client_secret, ENV['CALDO_GOOGLE_API_CLIENT_SECRET']
 
-    set :scss_dir,     'assets/dynamic/stylesheets'
+    enable :static
+    set :root,          File.dirname(__FILE__)
     set :public_folder, File.dirname(__FILE__) + '/assets/static'
+    set :scss_dir,     'assets/dynamic/stylesheets'
 
     get '/stylesheets/:file.css' do
       template = params[:file]
@@ -25,7 +25,7 @@ module Caldo
 
     private
     def stylesheet_exists?(asset)
-      File.exists?(File.join(settings.root, "assets", "dynamic", "stylesheets", asset + ".scss"))
+      File.exists?(File.join(settings.root, settings.scss_dir, asset + ".scss"))
     end
   end
 end

@@ -37,6 +37,7 @@ module Caldo
       else
         redirect client.authorization_uri, 303 unless authorization_in_progress?
       end
+
     end
 
     alias_method :require_authentication, :initialize_api_client

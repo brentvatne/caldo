@@ -17,7 +17,7 @@ http://github.com/necolas/css3-github-buttons
     text-decoration: none; 
     text-shadow: 1px 1px 0 #fff; 
     font:11px/normal sans-serif; 
-    color: #333; 
+    color: #333 !important; 
     white-space: nowrap; 
     cursor: pointer; 
     outline: none; 
@@ -46,7 +46,7 @@ http://github.com/necolas/css3-github-buttons
     border-bottom-color: #2a65a0;
     text-decoration: none; 
     text-shadow: -1px -1px 0 rgba(0,0,0,0.3); 
-    color: #fff; 
+    color: #fff !important; 
     background-color: #3C8DDE;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#599bdc), to(#3072b3));
     background-image: -moz-linear-gradient(#599bdc, #3072b3);
