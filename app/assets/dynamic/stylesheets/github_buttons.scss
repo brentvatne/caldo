@@ -7,7 +7,11 @@ http://github.com/necolas/css3-github-buttons
 
 /* ------------------------------------------------------------------------------------------------------------- BUTTON */
 
-.button { 
+.button {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
     position: relative; 
     overflow: visible; 
     display: inline-block; 

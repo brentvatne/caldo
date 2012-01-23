@@ -11,12 +11,12 @@ body {
     list-style-type: none;
   }
 
-  a, a:link, a:visited {
+  a, a:visited {
     color: #0e7cc9;
-    -webkit-transition: color 1s linear;
-    -moz-transition: color 1s linear;
-    -o-transition: color 1s linear;
-    transition: color 1s linear;
+    -webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25s ease-in-out;
+    -o-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
 
     &:hover {
       color: #011e37;
