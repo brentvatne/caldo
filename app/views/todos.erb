@@ -9,11 +9,11 @@
     <p>Nothing to do today..</p>
   <% else %>
     <ul class="events">
-      <% events.each do |event| %>
+      <% events.each_with_index do |event, i| %>
         <li class="event">
-					<input type="checkbox" id="task-1" />
-					<label for="task-1">
-						<strong class="event-summary"><%= event.summary %>
+					<input type="checkbox" class="todo" id="task-<%= i %>" data-event-id="<%= event.id %>"/>
+					<label for="task-<%= i %>">
+						<strong class="event-summary"><%= event.summary %></strong>
 					</label>
         </li>
       <% end %>
