@@ -13,11 +13,6 @@ body {
 
   a, a:visited {
     color: #0e7cc9;
-    -webkit-transition: all 0.25s ease-in-out;
-    -moz-transition: all 0.25s ease-in-out;
-    -o-transition: all 0.25s ease-in-out;
-    transition: all 0.25s ease-in-out;
-
     &:hover {
       color: #011e37;
     }

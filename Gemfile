@@ -2,10 +2,9 @@ source "http://rubygems.org"
 
 # Sinatra and related gems
 gem 'sinatra', '~> 1.3.2'
-gem 'rack'
 gem 'shotgun', '~> 0.9'
 gem 'ratpack', '~> 0.1.3'
-gem 'sinatra-flash'
+gem 'sinatra-flash', '~> 0.3.0'
 
 # Assets
 gem 'sass', '~> 3.1.11'
@@ -20,6 +19,8 @@ gem 'dm-sqlite-adapter', '~> 1.2.0'
 
 group :test do
   gem 'rspec', '~> 2.8.0'
+  gem 'capybara', '~> 1.1.2'
   gem 'rack-test', '~> 0.6.1'
+  gem 'timecop', '~> 0.3.5'
 end
 

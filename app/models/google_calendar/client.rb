@@ -1,11 +1,12 @@
 require 'google/api_client'
+require_relative 'client/event_interface'
 require 'date'
 require 'time'
 
 module Caldo
   module GoogleCalendar
     class Client
-      attr_reader :token_pair
+      include EventInterface
 
       def initialize(params)
         self.delegate      = Google::APIClient.new
@@ -16,12 +17,6 @@ module Caldo
         self.code          = params[:code]
         self.token_pair    = params[:token_pair]
         self.state         = params[:state]
-      end
-
-      def events(params)
-        params.merge!('calendarId' => 'primary')
-        delegate.execute(:api_method => calendar_api.events.list,
-                         :parameters => params).data.to_hash["items"]
       end
 
       def authorization_details
@@ -49,10 +44,6 @@ module Caldo
         enable_auto_approval(authorization_details.authorization_uri.to_s)
       end
 
-      def format_date(date)
-        date.to_time.utc.xmlschema
-      end
-
       def has_valid_access_token?
         access_token? && !delegate.authorization.expired?
       end
@@ -65,12 +56,22 @@ module Caldo
         delegate.authorization.fetch_access_token!
       end
 
+      def token_pair=(new_token_pair)
+        if new_token_pair
+          delegate.authorization.update_token!(new_token_pair.to_hash)
+
+          if refresh_token? && delegate.authorization.expired?
+            delegate.authorization.fetch_access_token!
+          end
+        end
+      end
+
+      def token_pair
+        delegate.authorization
+      end
+
       private
       attr_accessor :delegate
-
-      def calendar_api
-        @calendar_api ||= delegate.discovered_api('calendar', 'v3')
-      end
 
       def client_id=(new_client_id)
         delegate.authorization.client_id = new_client_id
@@ -94,16 +95,6 @@ module Caldo
 
       def state=(new_state)
         delegate.authorization.state = new_state
-      end
-
-      def token_pair=(new_token_pair)
-        if new_token_pair
-          delegate.authorization.update_token!(new_token_pair.to_hash)
-
-          if refresh_token? && delegate.authorization.expired?
-            delegate.authorization.fetch_access_token!
-          end
-        end
       end
 
       def refresh_token?
