@@ -19,5 +19,15 @@ module Caldo
       erb :todos, :locals => { :events => events,
                                :date => DatePresenter.new(date) }
     end
+
+    get '/todo/complete/:id' do
+      content_type :json
+
+      if calendar.update_event(:id => id, :color => :green)
+        # success
+      else
+        # failure
+      end.to_json
+    end
   end
 end
