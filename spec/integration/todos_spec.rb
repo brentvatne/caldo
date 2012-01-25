@@ -1,5 +1,5 @@
 require_relative '../config/monkeypatch_auth'
-require_relative '../acceptance_helper'
+require_relative '../integration_helper'
 
 describe 'todo functionality' do
   describe 'listing' do
