@@ -29,12 +29,28 @@ module Caldo
 
         return [] if result.nil?
 
-        result.inject([]) { |events, attrs| events << Event.new(attrs) }
+        result = result.inject([]) { |events, attrs| events << Event.new(attrs) }
+        clean_up_completed_recurrences(result)
       end
 
       private
       attr_accessor :client
 
+      def clean_up_completed_recurrences(events)
+        unique_recurring_instances = events.inject([]) do |uniques, event|
+          uniques << event.id.split("_").first if event.id.match(/_/)
+          uniques
+        end
+
+        events.inject([]) do |without_general_recurring, event|
+          matches = false
+          unique_recurring_instances.each do |unique|
+            matches = true if event.id == unique
+          end
+          without_general_recurring << event unless matches
+          without_general_recurring
+        end
+      end
     end
   end
 end

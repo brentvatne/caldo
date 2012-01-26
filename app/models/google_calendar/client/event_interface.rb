@@ -45,7 +45,7 @@ module Caldo
           instance_date = DateTime.parse(instance_date).to_date.xmlschema
           instance_date == start_date
         end
-
+        #_20122025
         find_event(instance["id"])
       end
 
