@@ -14,25 +14,16 @@ module Caldo
 
     get %r{(\d{4}-\d{2}-\d{2})}, :authenticates => true do
       date   = params[:captures].first
-      events = calendar.find_events_on_date(date)
+      events = Todo.all_on_date(date)
 
       erb :todos, :locals => { :events => events,
                                :date => DatePresenter.new(date) }
     end
 
     post '/events/complete', :authenticates => true do
-      update = calendar.update_event(:id => params[:id],
-                                     :given_date => params[:given_date],
-                                     :start_date => params[:start_date],
-                                     :end_date => params[:end_date],
-                                     :color => 2)
-      response = if update
-        { :updated => true }
-      else
-        { :updated => false }
-      end
+      update = Todo.mark_complete(:id => params[:id], :date => params[:date])
 
-      params.to_json
+      { :updated => !!update }.to_json
     end
   end
 end

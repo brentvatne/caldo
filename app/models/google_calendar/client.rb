@@ -9,7 +9,7 @@ module Caldo
       include EventInterface
 
       def initialize(params)
-        self.delegate      = Google::APIClient.new
+        self.delegate       = Google::APIClient.new
         self.client_id     = params[:client_id]
         self.client_secret = params[:client_secret]
         self.scope         = params[:scope] || default_options[:scope]
@@ -17,6 +17,7 @@ module Caldo
         self.code          = params[:code]
         self.token_pair    = params[:token_pair]
         self.state         = params[:state]
+        self.calendar      = Calendar.new(self)
       end
 
       def authorization_details
