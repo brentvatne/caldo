@@ -15,15 +15,15 @@ module Caldo
         send_get_by_id_request(id)
       end
 
-      def find_events_on_date(date)
-        date          = DateTime.parse(date)
-        date_to_find  = DateTime.new(date.year,date.month,date.day,0,0,0,'-8')
-        one_day_later = DateTime.new(date.year,date.month,date.day,23,59,59,'-8')
+      def find_events_by_date(params)
+        min = params[:min]
+        max = params[:max]
 
         result = send_list_request({
-          'timeMin' => format_date(date_to_find),
-          'timeMax' => format_date(one_day_later),
-          'singleEvents' => "true"
+          'timeMin' => format_date(min),
+          'timeMax' => format_date(max),
+          'singleEvents' => 'true',
+          'maxResults' => '50'
         })
 
         return [] if result.nil?
@@ -32,7 +32,6 @@ module Caldo
       end
 
       def update_event(params)
-        # puts "update_event #{params[:date]}"
         send_update_request({
           'eventId'   => params[:id],
           'startDate' => params[:date],
