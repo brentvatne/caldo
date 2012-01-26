@@ -1,3 +1,5 @@
+require 'date'
+
 module Caldo
   module GoogleCalendar
     module EventInterface
@@ -38,13 +40,20 @@ module Caldo
       end
 
       def find_recurring_event(id, start_date)
-        instances = delegate.execute(
+        instance = recurring_event_instances(id).detect do |i|
+          instance_date = i["start"]["date"] || i["start"]["dateTime"]
+          instance_date = DateTime.parse(instance_date).to_date.xmlschema
+          instance_date == start_date
+        end
+
+        find_event(instance["id"])
+      end
+
+      def recurring_event_instances(id)
+        delegate.execute(
           :api_method => calendar_api.events.instances,
           :parameters => default_params.merge('eventId' => id)
         ).data.items
-        instance = instances.detect { |i| i["start"]["date"] == start_date }
-
-        find_event(instance["id"])
       end
 
       def list_events(params)

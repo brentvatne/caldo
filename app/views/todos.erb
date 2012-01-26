@@ -15,7 +15,7 @@
                      'data-given-date' => date.portable,
                      'data-start-date' => event.start_date,
                      'data-end-date'   => event.end_date %>
-         <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>">
+          <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>" <%= "checked" if event.complete? %>>
 					<label for="task-<%= i %>">
 						<strong class="event-summary"><%= event.summary %></strong>
 					</label>
