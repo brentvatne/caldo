@@ -18,7 +18,7 @@ module Caldo
       def find_events_on_date(date)
         date          = DateTime.parse(date)
         date_to_find  = DateTime.new(date.year,date.month,date.day,0,0,0,'-8')
-        one_day_later = date_to_find + 1
+        one_day_later = DateTime.new(date.year,date.month,date.day,23,59,59,'-8')
 
         result = client.list_events({
           'timeMin' => client.format_date(date_to_find),
