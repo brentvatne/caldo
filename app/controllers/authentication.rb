@@ -36,8 +36,7 @@ module Caldo
                       :code          => params[:code])
 
       if client.has_valid_access_token?
-        self.calendar = GoogleCalendar::Calendar.new(client)
-        Thread.current['GoogleCalendar::APIClient'] = self.calendar
+        Thread.current['GoogleCalendar'] = self.client.calendar
       else
         redirect client.authorization_uri, 303 unless authorization_in_progress?
       end

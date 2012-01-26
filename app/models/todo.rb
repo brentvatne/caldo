@@ -5,11 +5,11 @@ module Caldo
     end
 
     def self.mark_complete(params)
-      service.update_event(params.merge(:color => 2))
+      service.update_event(params.merge(:color => "2"))
     end
 
     def self.service
-      Thread.current['GoogleCalendarClient']
+      Thread.current['GoogleCalendar']
     end
   end
 end

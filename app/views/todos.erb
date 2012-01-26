@@ -12,7 +12,7 @@
       <% events.each_with_index do |event, i| %>
         <%= tag :li, 'class' => 'event',
                      'data-event-id'   => event.id,
-                     'data-given-date' => date.portable,
+                     'data-date'       => date.portable,
                      'data-start-date' => event.start_date,
                      'data-end-date'   => event.end_date %>
           <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>" <%= "checked" if event.complete? %>>
