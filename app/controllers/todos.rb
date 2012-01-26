@@ -1,3 +1,4 @@
+require 'json'
 require_relative 'authentication'
 require_relative '../presenters/date'
 
@@ -7,12 +8,11 @@ module Caldo
       erb :unauthenticated
     end
 
-    get '/today', :requires_authentication => true do
+    get '/today', :authenticates => true do
       redirect to("/#{Date.today.to_s}")
     end
 
-    # Matches the route /2012-01-14
-    get %r{(\d{4}-\d{2}-\d{2})}, :requires_authentication => true do
+    get %r{(\d{4}-\d{2}-\d{2})}, :authenticates => true do
       date   = params[:captures].first
       events = calendar.find_events_on_date(date)
 
@@ -20,14 +20,14 @@ module Caldo
                                :date => DatePresenter.new(date) }
     end
 
-    get '/todo/complete/:id' do
-      content_type :json
-
-      if calendar.update_event(:id => id, :color => :green)
-        # success
+    get '/events/:id/complete', :authenticates => true do
+      response = if calendar.update_event(:id => params[:id], :color => :green)
+        { :updated => true }
       else
-        # failure
-      end.to_json
+        { :updated => false }
+      end
+
+      response.to_json
     end
   end
 end

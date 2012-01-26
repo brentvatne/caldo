@@ -42,7 +42,7 @@ module Caldo
       end
     end
 
-    set(:requires_authentication) do |required|
+    set(:authenticates) do |required|
       condition { initialize_api_client if required }
     end
 
