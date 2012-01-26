@@ -10,8 +10,12 @@
   <% else %>
     <ul class="events">
       <% events.each_with_index do |event, i| %>
-        <li class="event">
-					<input type="checkbox" class="todo" id="task-<%= i %>" data-event-id="<%= event.id %>"/>
+        <%= tag :li, 'class' => 'event',
+                     'data-event-id'   => event.id,
+                     'data-given-date' => date.portable,
+                     'data-start-date' => event.start_date,
+                     'data-end-date'   => event.end_date %>
+         <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>">
 					<label for="task-<%= i %>">
 						<strong class="event-summary"><%= event.summary %></strong>
 					</label>
@@ -24,4 +28,4 @@
     <%= link_to " &larr; previous day", date.prev_date_path, :class => "previous-day" %>
     <%= link_to "next day &rarr;", date.next_date_path, :class => "next-day" %>
   </nav>
-</todos>
+</section>

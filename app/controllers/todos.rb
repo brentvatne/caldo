@@ -20,14 +20,19 @@ module Caldo
                                :date => DatePresenter.new(date) }
     end
 
-    get '/events/:id/complete', :authenticates => true do
-      response = if calendar.update_event(:id => params[:id], :color => :green)
+    post '/events/complete', :authenticates => true do
+      update = calendar.update_event(:id => params[:id],
+                                     :given_date => params[:given_date],
+                                     :start_date => params[:start_date],
+                                     :end_date => params[:end_date],
+                                     :color => 2)
+      response = if update
         { :updated => true }
       else
         { :updated => false }
       end
 
-      response.to_json
+      params.to_json
     end
   end
 end

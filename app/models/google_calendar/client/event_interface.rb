@@ -9,16 +9,8 @@ module Caldo
         { 'calendarId' => 'primary' }
       end
 
-      def find_event(id)
-        delegate.execute(
-          :api_method => calendar_api.events.get,
-          :parameters => default_params.merge('eventId' => id)
-        ).data
-      end
-
       def update_event(params)
-        event = find_event(params['eventId'])
-        # if event.recurrence.empty?
+        event = find_event(params['eventId'], params['startDate'])
 
         event.color_id = params['colorId']
 
@@ -29,8 +21,30 @@ module Caldo
           :headers => {'Content-Type' => 'application/json'}
         )
 
-        print result.data.updated
         result.data.updated
+      end
+
+      def find_event(id, start_date = nil)
+        event = delegate.execute(
+          :api_method => calendar_api.events.get,
+          :parameters => default_params.merge('eventId' => id)
+        ).data
+
+        unless event.recurrence.empty?
+          event = find_recurring_event(id, start_date)
+        end
+
+        event
+      end
+
+      def find_recurring_event(id, start_date)
+        instances = delegate.execute(
+          :api_method => calendar_api.events.instances,
+          :parameters => default_params.merge('eventId' => id)
+        ).data.items
+        instance = instances.detect { |i| i["start"]["date"] == start_date }
+
+        find_event(instance["id"])
       end
 
       def list_events(params)

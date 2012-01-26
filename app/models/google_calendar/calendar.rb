@@ -9,8 +9,9 @@ module Caldo
 
       def update_event(params)
         client.update_event({
-          'eventId' => params[:id],
-          'colorId' => '2'
+          'eventId'   => params[:id],
+          'startDate' => params[:given_date],
+          'colorId'   => '2'
         })
       end
 
@@ -23,6 +24,8 @@ module Caldo
           'timeMin' => client.format_date(date_to_find),
           'timeMax' => client.format_date(one_day_later)
         })
+
+        # if events include an instance of a recurring event, hide the recurring event
 
         return [] if result.nil?
 
