@@ -7,51 +7,12 @@ module Caldo
         self.client = api_client
       end
 
-      def calendar_api
-        @calendar_api ||= client.discovered_api('calendar', 'v3')
-      end
-
       def default_options
         { 'calendarId' => 'primary' }
       end
 
       def find_event(id, start_date = nil)
-        event = send_get_by_id_request(id)
-
-        unless event.recurrence.empty?
-          event = find_recurring_event(id, start_date)
-        end
-
-        event
-      end
-
-      def find_recurring_event(id, start_date)
-        instance = recurring_event_instances(id).detect do |i|
-          instance_date = i["start"]["date"] || i["start"]["dateTime"]
-          instance_date = DateTime.parse(instance_date).to_date.xmlschema
-          instance_date == start_date
-        end
-        find_event(instance["id"])
-      end
-
-      def recurring_event_instances(id)
-        client.execute(
-          :api_method => calendar_api.events.instances,
-          :parameters => default_options.merge('eventId' => id)
-        ).data.items
-      end
-
-      def format_date(date)
-        date.to_time.xmlschema
-      end
-
-      def update_event(params)
-        puts "update_event #{params[:date]}"
-        send_update_request({
-          'eventId'   => params[:id],
-          'startDate' => params[:date],
-          'colorId'   => params[:color]
-        })
+        send_get_by_id_request(id)
       end
 
       def find_events_on_date(date)
@@ -61,17 +22,31 @@ module Caldo
 
         result = send_list_request({
           'timeMin' => format_date(date_to_find),
-          'timeMax' => format_date(one_day_later)
+          'timeMax' => format_date(one_day_later),
+          'singleEvents' => "true"
         })
 
         return [] if result.nil?
 
-        result = result.inject([]) { |events, attrs| events << Event.new(attrs) }
-        clean_up_completed_recurrences(result)
+        result.inject([]) { |events, attrs| events << Event.new(attrs) }
+      end
+
+      def update_event(params)
+        # puts "update_event #{params[:date]}"
+        send_update_request({
+          'eventId'   => params[:id],
+          'startDate' => params[:date],
+          'colorId'   => params[:color]
+        })
       end
 
       private
       attr_accessor :client
+
+      def calendar_api
+        @calendar_api ||= client.discovered_api('calendar', 'v3')
+      end
+
       def send_get_by_id_request(id)
         client.execute(
           :api_method => calendar_api.events.get,
@@ -94,26 +69,14 @@ module Caldo
         result.data.updated
       end
 
+      def format_date(date)
+        date.to_time.xmlschema
+      end
+
       def send_list_request(params)
         params.merge!(default_options)
         client.execute(:api_method => calendar_api.events.list,
                        :parameters => params).data.to_hash["items"]
-      end
-
-      def clean_up_completed_recurrences(events)
-        unique_recurring_instances = events.inject([]) do |uniques, event|
-          uniques << event.id.split("_").first if event.id.match(/_/)
-          uniques
-        end
-
-        events.inject([]) do |without_general_recurring, event|
-          matches = false
-          unique_recurring_instances.each do |unique|
-            matches = true if event.id == unique
-          end
-          without_general_recurring << event unless matches
-          without_general_recurring
-        end
       end
     end
   end
