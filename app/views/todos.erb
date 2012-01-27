@@ -12,14 +12,16 @@
       <% todos.each_with_index do |todo, i| %>
         <%= tag :li, 'class' => 'todo' + (todo.important? ? ' important' : '') + (todo.complete? ? ' done' : ''),
                      'data-event-id' => todo.event_id,
-                     'data-date' => date.portable,
+                     'data-date'     => date.portable,
+                     'data-summary'  => todo.summary,
                      'data-variable' => todo.summary_variable %>
           <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>" <%= "checked" if todo.complete? %>>
 					<label for="task-<%= i %>">
-						<strong class="todo-summary"><%= todo.summary %></strong>
+            <% presenter = Caldo::TodoPresenter.new(todo) %>
+						<strong class="todo-summary"><%= presenter.summary %></strong>
             <span class="todo-date-time">
-              <strong class="todo-date"><%= todo.date %></strong>
-              <strong class="todo-time"><%= todo.time %></strong>
+              <strong class="todo-date"><%= presenter.date %></strong>
+              <strong class="todo-time"><%= presenter.time %></strong>
             </span>
 					</label>
         </li>

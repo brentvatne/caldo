@@ -1,6 +1,7 @@
 require 'json'
-require_relative 'authentication'
-require_relative '../presenters/date'
+require_relative 'authentication_controller'
+require_relative '../presenters/date_presenter'
+require_relative '../presenters/todo_presenter'
 
 module Caldo
   class App < Sinatra::Application
@@ -20,9 +21,9 @@ module Caldo
     end
 
     post '/todos/complete', :authenticates => true do
-      (!! Todo.mark_complete(:id   => params[:id],
-                             :date => params[:date],
-                             :summary => params[:summary],
+      (!! Todo.mark_complete(:id       => params[:id],
+                             :date     => params[:date],
+                             :summary  => params[:summary],
                              :variable => params[:variable])
       ).to_json
     end
