@@ -10,6 +10,10 @@ module Caldo
       @date.strftime("%A, %B %d")
     end
 
+    def portable
+      @date.to_date.xmlschema
+    end
+
     def path
       date_path(@date)
     end

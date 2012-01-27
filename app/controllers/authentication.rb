@@ -5,6 +5,8 @@ require_relative '../models/token_pair'
 
 module Caldo
   class App < Sinatra::Application
+    attr_accessor :client, :calendar
+
     get '/oauth2callback' do
       initialize_api_client
       client.fetch_access_token
@@ -23,8 +25,6 @@ module Caldo
     end
 
     private
-    attr_accessor :client, :calendar
-
     def initialize_api_client
       # this is a good opportunity to use a DSL to create it
       self.client = GoogleCalendar::Client.new(
@@ -36,13 +36,13 @@ module Caldo
                       :code          => params[:code])
 
       if client.has_valid_access_token?
-        self.calendar = GoogleCalendar::Calendar.new(client)
+        Thread.current['GoogleCalendar'] = self.client.calendar
       else
         redirect client.authorization_uri, 303 unless authorization_in_progress?
       end
     end
 
-    set(:requires_authentication) do |required|
+    set(:authenticates) do |required|
       condition { initialize_api_client if required }
     end
 

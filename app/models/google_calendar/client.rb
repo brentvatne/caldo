@@ -1,15 +1,15 @@
 require 'google/api_client'
-require_relative 'client/event_interface'
+require_relative 'calendar'
 require 'date'
 require 'time'
 
 module Caldo
   module GoogleCalendar
     class Client
-      include EventInterface
+      attr_reader :calendar
 
       def initialize(params)
-        self.delegate      = Google::APIClient.new
+        self.delegate       = Google::APIClient.new
         self.client_id     = params[:client_id]
         self.client_secret = params[:client_secret]
         self.scope         = params[:scope] || default_options[:scope]
@@ -17,6 +17,11 @@ module Caldo
         self.code          = params[:code]
         self.token_pair    = params[:token_pair]
         self.state         = params[:state]
+        self.calendar      = Calendar.new(self)
+      end
+
+      def method_missing(method, *args, &block)
+        delegate.send(method, *args, &block)
       end
 
       def authorization_details
@@ -72,6 +77,7 @@ module Caldo
 
       private
       attr_accessor :delegate
+      attr_writer :calendar
 
       def client_id=(new_client_id)
         delegate.authorization.client_id = new_client_id
