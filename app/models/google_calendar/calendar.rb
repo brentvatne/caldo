@@ -2,6 +2,8 @@ require_relative 'event'
 
 module Caldo
   module GoogleCalendar
+    COLORS = { :green => "2", :grey => "8" }
+
     class Calendar
       def initialize(api_client)
         self.client = api_client
@@ -35,7 +37,7 @@ module Caldo
         send_update_request({
           'eventId'   => params[:id],
           'startDate' => params[:date],
-          'colorId'   => params[:color]
+          'colorId'   => COLORS[params[:color]] || COLORS[:grey]
         })
       end
 

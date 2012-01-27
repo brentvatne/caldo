@@ -2,7 +2,7 @@ require 'date'
 
 module Caldo
   class Todo
-    attr_accessor :event_id, :summary, :start_date, :end_date, :complete
+    attr_accessor :event_id, :summary, :start_date, :end_date, :complete, :important
 
     # Fetches events within a 5 days ahead and only returns those that are
     # marked as important or occur on the specified date.
@@ -12,14 +12,14 @@ module Caldo
     #
     # Returns an array of Event instances
     def self.all_on_date(date)
-      five_days_before = DateTime.parse(date) - 1
-      five_days_after  = DateTime.parse(date) + 5
+      given_date      = DateTime.parse(date)
+      five_days_after = DateTime.parse(date) + 5
 
-      events = service.find_events_by_date(:min => five_days_before,
+      events = service.find_events_by_date(:min => given_date,
                                            :max => five_days_after)
 
       events.inject([]) do |filtered_todos, event|
-        if event.occurs_on?(date) || event.summary.match(/\*important\*/)
+        if event.occurs_on?(date) || event.important?
           filtered_todos << new(event)
         end
         filtered_todos
@@ -27,21 +27,18 @@ module Caldo
     end
 
     def self.mark_complete(params)
-      service.update_event(params.merge(:color => "2"))
+      service.update_event(params.merge(:color => :green))
     end
 
     def self.mark_incomplete(params)
-      service.update_event(params.merge(:color => "8"))
-    end
-
-    def self.service
-      Thread.current['GoogleCalendar']
+      service.update_event(params.merge(:color => :grey))
     end
 
     def initialize(event)
       self.event_id   = event.id
       self.summary    = event.summary
       self.complete   = event.complete?
+      self.important  = event.important?
       self.start_date = event.start_date
       self.end_date   = event.end_date
     end
@@ -51,7 +48,7 @@ module Caldo
     end
 
     def important?
-      self.summary.match(/\*important\*/)
+      self.important
     end
 
     def date
@@ -65,6 +62,11 @@ module Caldo
       else
         date_time.strftime("%l:%M %p")
       end
+    end
+
+    private
+    def self.service
+      Thread.current['GoogleCalendar']
     end
   end
 end

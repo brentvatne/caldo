@@ -3,8 +3,7 @@ require 'date'
 module Caldo
   module GoogleCalendar
     class Event
-      attr_accessor :id, :summary, :description, :location,
-                    :start_date, :end_date, :color_id
+      attr_accessor :id, :summary, :description, :location, :start_date, :end_date, :color_id
 
       def initialize(attrs)
         self.id          = attrs["id"]
@@ -21,7 +20,11 @@ module Caldo
       end
 
       def complete?
-        color_id == "2"
+        color_id == COLORS[:green]
+      end
+
+      def important?
+        self.summary.match(/\*important\*/)
       end
     end
   end
