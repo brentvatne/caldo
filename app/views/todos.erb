@@ -2,22 +2,22 @@
   <a href="/sign_out">Sign out</a>
 </section>
 
-<section class="todos">
+<section class="task-list">
   <h1><%= date.humanize %></h1>
 
-  <% if events.length.zero? %>
+  <% if todos.length.zero? %>
     <p>Nothing to do today..</p>
   <% else %>
-    <ul class="events">
-      <% events.each_with_index do |event, i| %>
-        <%= tag :li, 'class' => 'event',
-                     'data-event-id'   => event.id,
-                     'data-date'       => date.portable,
-                     'data-start-date' => event.start_date,
-                     'data-end-date'   => event.end_date %>
-          <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>" <%= "checked" if event.complete? %>>
+    <ul class="todos">
+      <% todos.each_with_index do |todo, i| %>
+        <%= tag :li, 'class' => 'todo', 'data-event-id' => todo.event_id, 'data-date' => date.portable %>
+          <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>" <%= "checked" if todo.complete? %>>
 					<label for="task-<%= i %>">
-						<strong class="event-summary"><%= event.summary %></strong>
+						<strong class="todo-summary"><%= todo.summary %></strong>
+						<% if todo.important? %>
+							<strong class="todo-date"><%= todo.date %></strong>
+						<% end %>
+						<strong class="todo-time"><%= todo.time %></strong>
 					</label>
         </li>
       <% end %>

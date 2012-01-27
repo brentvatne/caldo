@@ -41,12 +41,12 @@ body {
   }
 }
 
-.todos {
+.task-list {
   text-align: center;
-  .events {
+  .todos {
     width: 350px;
     display: inline-block;
-    .event {
+    .todo {
       text-align: left;
     }
   }
