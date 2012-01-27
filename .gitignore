@@ -12,3 +12,4 @@ db/app.db
 .sass-cache/
 .rvmrc
 spec/config/api_access.yaml
+.webbynode

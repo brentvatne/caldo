@@ -33,5 +33,4 @@ describe Caldo::DatePresenter do
       subject.prev_date_path.should eq("/2012-01-26")
     end
   end
-
 end
