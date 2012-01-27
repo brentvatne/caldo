@@ -1,15 +1,21 @@
 $(function() {
   $(".notification").addClass("hidden");
 
+  var toggle_complete = function(element) {
+		element.toggleClass('done');
+  };
+
   $("input.todo").click(function() {
-    var this_id    = $(this).parent(".todo").data("event-id");
-    var this_date  = $(this).parent(".todo").data("date");
-    var $this_el   = $(".todos").find("[data-event-id='" + this_id +"']");
+		var $this_el   = $(this).parent('.todo')
+    var this_id    = $this_el.data("event-id");
+    var this_date  = $this_el.data("date");
 		var completed  = !!$(this).attr("checked");
 
 		var complete_path   = '/todos/complete';
 		var incomplete_path = '/todos/incomplete';
 		var path = "";
+
+		toggle_complete($this_el);
 
 		if (completed) {
 			path = complete_path;	
@@ -20,9 +26,12 @@ $(function() {
     $.post(path, {
       id:   this_id,
       date: this_date
-    }, function(data) {
-      console.log(data);
+    }, function(success) {
+			if (success == true) {
+				//done
+			} else {
+				toggle_complete($this_el.parent(".todo"));
+			}
     });
-    // must handle failure case
   });
 });

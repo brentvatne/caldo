@@ -1,0 +1,38 @@
+#simplemodal-container a.modalCloseImg {
+	background: url('/images/x.png') no-repeat; /* adjust url as required */
+	width:25px;
+	height:29px;
+	display:inline;
+	z-index:3200;
+	position:absolute;
+	top:-15px;
+	right:-18px;
+	cursor:pointer;
+}
+#simplemodal-overlay {
+  background: #ccc;
+}
+
+#simplemodal-container {
+  width: 220px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background: white;
+  position: relative;
+  text-align: center;
+  h2 {
+    margin: 0;
+    padding: 0px 0px 15px 0px;
+  }
+  input {
+    display: block;
+    width: 215px;
+    height: 25px;
+    margin-bottom: 10px;
+  }
+
+  a.button {
+    display: block;
+    width: 192px;
+  }
+}
