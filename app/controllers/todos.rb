@@ -20,8 +20,10 @@ module Caldo
     end
 
     post '/todos/complete', :authenticates => true do
+      p params
       (!! Todo.mark_complete(:id   => params[:id],
-                             :date => params[:date])
+                             :date => params[:date],
+                             :variable => params[:variable])
       ).to_json
     end
 

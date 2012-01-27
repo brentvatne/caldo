@@ -12,7 +12,8 @@
       <% todos.each_with_index do |todo, i| %>
         <%= tag :li, 'class' => 'todo' + (todo.important? ? ' important' : '') + (todo.complete? ? ' done' : ''),
                      'data-event-id' => todo.event_id,
-                     'data-date' => date.portable %>
+                     'data-date' => date.portable,
+                     'data-variable' => "hello" %>
           <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>" <%= "checked" if todo.complete? %>>
 					<label for="task-<%= i %>">
 						<strong class="todo-summary"><%= todo.summary %></strong>
