@@ -9,7 +9,7 @@ module Caldo
     end
 
     def summary
-      todo.summary.gsub('*important*','')
+      todo.summary.gsub('*important*','').gsub(Caldo::VARIABLE_TAG, '').strip
     end
 
     def date

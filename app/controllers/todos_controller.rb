@@ -21,16 +21,16 @@ module Caldo
     end
 
     post '/todos/complete', :authenticates => true do
-      (!! Todo.mark_complete(:id       => params[:id],
-                             :date     => params[:date],
-                             :summary  => params[:summary],
-                             :variable => params[:variable])
+      (Todo.mark_complete(:id       => params[:id],
+                          :date     => params[:date],
+                          :summary  => params[:summary],
+                          :variable => params[:variable])
       ).to_json
     end
 
     post '/todos/incomplete', :authenticates => true do
-      (!! Todo.mark_incomplete(:id   => params[:id],
-                               :date => params[:date])
+      (Todo.mark_incomplete(:id   => params[:id],
+                            :date => params[:date])
       ).to_json
     end
   end

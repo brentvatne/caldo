@@ -1,15 +1,12 @@
 require 'date'
 
 module Caldo
+  # A variable can appear in the summary of a Todo, for example "Run {minutes}"
+  VARIABLE_TAG        = /(\{)(?<variable>[\w\s]+)(\})/
+  VARIABLE_EXPRESSION = /(?<task>.*?)#{VARIABLE_TAG}/
+
   class Todo
     attr_accessor :event_id, :summary, :start_date, :end_date, :complete, :important
-
-    # Variables appear in the summary of a Todo
-    #
-    # Example
-    #
-    #    "Run {minutes}" # minutes is the variable
-    VARIABLE_TAG = /(?<task>.*?)(\{)(?<variable>[\w\s]+)(\})/
 
     # Fetches events within a 5 days ahead and only returns those that are
     # marked as important or occur on the specified date.
@@ -49,7 +46,7 @@ module Caldo
     # Returns a truthy value if it was a success, or a falsey if not
     def self.mark_complete(params)
       summary = substitute_variable(params[:summary], params[:variable])
-      service.update_event(params.merge(:color => :green, :summary => summary))
+      !!service.update_event(params.merge(:color => :green, :summary => summary))
     end
 
     # Sends the service call to mark the corresponding event as incomplete on
@@ -60,7 +57,7 @@ module Caldo
     #
     # Returns a truthy value if it was a success, or a falsey if not
     def self.mark_incomplete(params)
-      service.update_event(params.merge(:color => :grey))
+      !!service.update_event(params.merge(:color => :grey))
     end
 
     # Replaces the variable portion of a summary with a given value
@@ -73,7 +70,7 @@ module Caldo
     #    Todo.substitute_variable("Run {minutes}", "30")
     #    # => 'Run - 30 minutes'
     def self.substitute_variable(summary, value)
-      if matches = summary.match(VARIABLE_TAG)
+      if matches = summary.match(VARIABLE_EXPRESSION)
         "#{matches[:task].strip} - #{value} #{matches[:variable]}"
       else
         summary
@@ -98,7 +95,7 @@ module Caldo
     end
 
     def summary_variable
-      matches = summary.match(VARIABLE_TAG)
+      matches = summary.match(VARIABLE_EXPRESSION)
       matches ? matches[:variable] : ""
     end
 
