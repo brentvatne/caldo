@@ -1,37 +1,39 @@
 $(function() {
   $(".notification").addClass("hidden");
 
-  var toggle_complete = function(element) {
-		element.toggleClass('done');
-  };
-
   $("input.todo").click(function() {
-		var $this_el   = $(this).parent('.todo')
-    var this_id    = $this_el.data("event-id");
-    var this_date  = $this_el.data("date");
-		var completed  = !!$(this).attr("checked");
+		var $todo         = $(this).parent('.todo');
+		var todo_variable = $todo.data("data-variable");
 
-		var complete_path   = '/todos/complete';
-		var incomplete_path = '/todos/incomplete';
-		var path = "";
+		$todo.toggleClass('done');
 
-		toggle_complete($this_el);
-
-		if (completed) {
-			path = complete_path;	
+		if (todo_variable) {
+			create_modal_for($todo, send_complete_request);
 		} else {
-			path = incomplete_path;
+			send_complete_request($todo, null);
 		}
+  });
+
+	var create_modal_for = (function($todo, callback) {
+		callback($todo, null);
+	});
+
+	var send_complete_request = (function($todo, variable_input) {
+    var todo_id        = $todo.data("event-id");
+    var todo_date      = $todo.data("date");
+		var todo_completed = !!$todo.find("input").attr("checked");
+
+		var path = todo_completed ? '/todos/complete' : '/todos/incomplete';
 
     $.post(path, {
-      id:   this_id,
-      date: this_date
+      id:   todo_id,
+      date: todo_date,
+			variable: variable_input
     }, function(success) {
-			if (success == true) {
-				//done
-			} else {
-				toggle_complete($this_el.parent(".todo"));
+			if (success == false) {
+				$todo.toggleClass('done');
+				$todo.find("input").attr("checked", false)
 			}
     });
-  });
+	});
 });
