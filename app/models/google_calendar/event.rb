@@ -15,6 +15,11 @@ module Caldo
         self.color_id    = attrs["colorId"] || ""
       end
 
+      # Make the attributes also accessible like a hash for easier initialization
+      def [](sym)
+        self.send(sym)
+      end
+
       def occurs_on?(other_date)
         DateTime.parse(self.start_date).to_date.to_s == other_date
       end
