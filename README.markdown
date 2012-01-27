@@ -25,10 +25,7 @@ visually reflect the change.
 
 - Authenticate using OAuth2
 - List events by day, accesible by path `/2012-01-14` (`yyyy-mm-dd`)
-
-## What will it do?
-
-Two core features are remaining:
+- Include events tagged as *important* 5 days before they come due.
 
 ### Mark events as "completed" in Google Calendar
 
@@ -38,20 +35,23 @@ Two core features are remaining:
 - Removing the check will change the color to grey, indicating that it
 	is not done.
 
+
+## What will it do?
+
+One core features are remaining:
 ### Record metadata to events upon completion
 
-- Put a tag in the title of your event to indicate that you want to
+- Put a single tag in the title of your event to indicate that you want to
 	record some data about it upon completion. For example "Run -
 	{{minutes}}" will ask you for the number of minutes it took you to
 	complete the task. Assuming you input 30 minutes, Caldo will rename the event
 	to "Run - 30 minutes".
-- Other tags can be included in the description, and will be recorded as
-	well.
 
 Hey, that's a lot of work you say! Yeah, it is. This is my goal for the
 RMU course, afterwards I would like to continue adding the following
 features:
 
+- Metadata in the description of an event
 - Customize event colors so everything isn't necessarily green.
 - Choose the calendar you want to use (currently defaults to your
 	primary calendar)
