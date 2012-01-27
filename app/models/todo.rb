@@ -3,6 +3,7 @@ require 'date'
 module Caldo
   class Todo
     attr_accessor :event_id, :summary, :start_date, :end_date, :complete, :important
+    VARIABLE_TAG = /\{[\w\s]+\}/
 
     # Fetches events within a 5 days ahead and only returns those that are
     # marked as important or occur on the specified date.
@@ -32,7 +33,13 @@ module Caldo
     end
 
     def self.mark_complete(params)
-      service.update_event(params.merge(:color => :green))
+      summary = substitute_variable(params[:summary], params[:variable])
+      service.update_event(params.merge(:color => :green, :summary => summary))
+    end
+
+    def self.substitute_variable(summary, variable)
+      return summary unless summary.match(VARIABLE_TAG)
+      summary.gsub(VARIABLE_TAG, variable)
     end
 
     def self.mark_incomplete(params)
@@ -48,9 +55,9 @@ module Caldo
       self.end_date   = event.end_date
     end
 
-    def summary
-      @summary.gsub('*important*','')
-    end
+    # def summary
+      # @summary.gsub('*important*','')
+    # end
 
     def complete?
       self.complete
@@ -71,6 +78,11 @@ module Caldo
       else
         date_time.strftime("%l:%M %p")
       end
+    end
+
+    def summary_variable
+      return "" unless summary.match(VARIABLE_TAG)
+      self.summary.scan(VARIABLE_TAG).first.gsub(/[\{\}]/,'')
     end
 
     private

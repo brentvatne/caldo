@@ -10,13 +10,13 @@ Capybara.app = Caldo::App
 
 RSpec.configure do |config|
   config.mock_with :rspec
-  config.include Capybara::DSL
+  # config.include Capybara::DSL
 
-  config.before(:suite) do
-    get_new_access_token
-    require_relative 'config/monkeypatch_auth'
-    Timecop.travel(Time.new(2012,1,15,15,25,0, "-08:00"))
-  end
+  # config.before(:suite) do
+  #   get_new_access_token
+  #   require_relative 'config/monkeypatch_auth'
+  #   Timecop.travel(Time.new(2012,1,15,15,25,0, "-08:00"))
+  # end
 end
 
 def get_new_access_token

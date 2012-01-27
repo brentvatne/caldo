@@ -37,7 +37,8 @@ module Caldo
         send_update_request({
           'eventId'   => params[:id],
           'startDate' => params[:date],
-          'colorId'   => COLORS[params[:color]] || COLORS[:grey]
+          'colorId'   => COLORS[params[:color]] || COLORS[:grey],
+          'summary'   => params[:summary]
         })
       end
 
@@ -59,6 +60,9 @@ module Caldo
         event = find_event(params['eventId'], params['startDate'])
 
         event.color_id = params['colorId']
+        event.summary  = params['summary'] if params['summary']
+
+        p event
 
         result = client.execute!(
           :api_method  => calendar_api.events.update,

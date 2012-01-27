@@ -34,6 +34,7 @@ $(function() {
 	var update_completeness_request = (function($todo, variable_input) {
     var todo_id        = $todo.data("event-id");
     var todo_date      = $todo.data("date");
+    var todo_summary   = $todo.find(".todo-summary").text();
 		var todo_completed = !!$todo.find("input").attr("checked");
 
 		var path = todo_completed ? '/todos/complete' : '/todos/incomplete';
@@ -41,9 +42,12 @@ $(function() {
     $.post(path, {
       id:   todo_id,
       date: todo_date,
-			variable: variable_input
+			variable: variable_input,
+			summary: todo_summary
     }, function(success) {
-			if (success == false) {
+			if (success) {
+				//change element summary
+			} else {
 				$todo.toggleClass('done');
 				$todo.find("input").attr("checked", false)
 			}
