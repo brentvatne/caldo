@@ -10,14 +10,16 @@
   <% else %>
     <ul class="todos">
       <% todos.each_with_index do |todo, i| %>
-        <%= tag :li, 'class' => 'todo', 'data-event-id' => todo.event_id, 'data-date' => date.portable %>
+        <%= tag :li, 'class' => 'todo' + (todo.important? ? ' important' : ''),
+                     'data-event-id' => todo.event_id,
+                     'data-date' => date.portable %>
           <input type="checkbox" class="todo" id="task-<%= i %>" class="task-<%= i %>" <%= "checked" if todo.complete? %>>
 					<label for="task-<%= i %>">
 						<strong class="todo-summary"><%= todo.summary %></strong>
-						<% if todo.important? %>
-							<strong class="todo-date"><%= todo.date %></strong>
-						<% end %>
-						<strong class="todo-time"><%= todo.time %></strong>
+            <span class="todo-date-time">
+              <strong class="todo-date"><%= todo.date %></strong>
+              <strong class="todo-time"><%= todo.time %></strong>
+            </span>
 					</label>
         </li>
       <% end %>

@@ -18,12 +18,17 @@ module Caldo
       events = service.find_events_by_date(:min => given_date,
                                            :max => five_days_after)
 
-      events.inject([]) do |filtered_todos, event|
+      todos = events.inject([]) do |filtered_todos, event|
         if event.occurs_on?(date) || event.important?
           filtered_todos << new(event)
         end
         filtered_todos
       end
+      todos.sort
+    end
+
+    def <=>(other)
+      self.start_date <=> other.start_date
     end
 
     def self.mark_complete(params)
@@ -43,6 +48,10 @@ module Caldo
       self.end_date   = event.end_date
     end
 
+    def summary
+      @summary.gsub('*important*','')
+    end
+
     def complete?
       self.complete
     end
@@ -58,7 +67,7 @@ module Caldo
     def time
       date_time = DateTime.parse(start_date)
       if date_time.hour == 0 && date_time.minute == 0 && date_time.second == 0
-        "All day"
+        ""
       else
         date_time.strftime("%l:%M %p")
       end
