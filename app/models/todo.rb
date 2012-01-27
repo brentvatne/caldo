@@ -97,25 +97,13 @@ module Caldo
       self.important
     end
 
-    def date
-      DateTime.parse(start_date).strftime("%A")
-    end
-
-    def time
-      date_time = DateTime.parse(start_date)
-      if date_time.hour == 0 && date_time.minute == 0 && date_time.second == 0
-        ""
-      else
-        date_time.strftime("%l:%M %p")
-      end
-    end
-
     def summary_variable
       matches = summary.match(VARIABLE_TAG)
       matches ? matches[:variable] : ""
     end
 
     private
+    # Returns the thread local Google Calendar API Client wrapper instance
     def self.service
       Thread.current['GoogleCalendar']
     end
