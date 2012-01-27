@@ -58,7 +58,7 @@ module Caldo
 
         event.color_id = params['colorId']
 
-        result = client.execute(
+        result = client.execute!(
           :api_method  => calendar_api.events.update,
           :parameters  => default_options.merge('eventId' => event.id),
           :body_object => event,

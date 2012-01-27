@@ -24,5 +24,11 @@ module Caldo
 
       { :updated => !!update }.to_json
     end
+
+    post '/todos/incomplete', :authenticates => true do
+      update = Todo.mark_incomplete(:id => params[:id], :date => params[:date])
+
+      { :updated => !!update }.to_json
+    end
   end
 end

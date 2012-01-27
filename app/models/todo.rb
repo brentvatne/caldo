@@ -30,6 +30,10 @@ module Caldo
       service.update_event(params.merge(:color => "2"))
     end
 
+    def self.mark_incomplete(params)
+      service.update_event(params.merge(:color => "8"))
+    end
+
     def self.service
       Thread.current['GoogleCalendar']
     end
