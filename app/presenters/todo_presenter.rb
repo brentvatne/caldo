@@ -1,3 +1,5 @@
+require 'date'
+
 module Caldo
   class TodoPresenter
     attr_accessor :todo
@@ -7,15 +9,20 @@ module Caldo
     end
 
     def summary
-      todo.summary
+      todo.summary.gsub('*important*','')
     end
 
     def date
-      todo.date
+      DateTime.parse(todo.start_date).strftime("%A")
     end
 
     def time
-      todo.time
+      date_time = DateTime.parse(todo.start_date)
+      if date_time.hour == 0 && date_time.minute == 0 && date_time.second == 0
+        ""
+      else
+        date_time.strftime("%l:%M %p").strip
+      end
     end
   end
 end

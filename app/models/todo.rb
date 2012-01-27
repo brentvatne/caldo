@@ -89,10 +89,6 @@ module Caldo
       self.end_date   = event[:end_date]
     end
 
-    # def summary
-      # @summary.gsub('*important*','')
-    # end
-
     def complete?
       self.complete
     end
