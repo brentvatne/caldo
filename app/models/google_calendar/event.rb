@@ -19,18 +19,6 @@ module Caldo
       def [](sym)
         self.send(sym)
       end
-
-      def occurs_on?(other_date)
-        DateTime.parse(self.start_date).to_date.to_s == other_date
-      end
-
-      def complete?
-        color_id == COLORS[:green]
-      end
-
-      def important?
-        !!self.summary.match(/\*important\*/)
-      end
     end
   end
 end

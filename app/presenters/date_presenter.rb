@@ -1,8 +1,7 @@
 require 'date'
 
 module Caldo
-  # This class is responsible for any date presentation logic used within
-  # the views.
+  # This class is responsible for any date presentation logic used within views.
   class DatePresenter
 
     # Accepts any Date object that responds to to_s with a parseable date string

@@ -41,8 +41,6 @@ module Caldo
           'summary'   => params[:summary]
         })
 
-        p response
-
         if response
           Event.new(response)
         else

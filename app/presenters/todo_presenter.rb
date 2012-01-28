@@ -1,15 +1,19 @@
 require 'date'
 
 module Caldo
+  # This class is responsible for any todo presentation logic used within views.
   class TodoPresenter
     attr_accessor :todo
 
+    # Instantiates the presenter from a todo instance
+    #
+    # todo - An instance of Caldo::Todo
     def initialize(todo)
       self.todo = todo
     end
 
     def summary
-      todo.summary.gsub('*important*','').gsub(Caldo::VARIABLE_TAG, '').strip
+      todo.summary.gsub(Caldo::IMPORTANT_TAG,'').gsub(Caldo::VARIABLE_TAG, '').strip
     end
 
     def date
