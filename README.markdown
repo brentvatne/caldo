@@ -13,6 +13,12 @@
 3. `rake server`
 4. Navigate to `http://localhost:4567/`
 
+Alternatively, you give it a test run: [http://caldo.webbyapp.com/](http://caldo.webbyapp.com/)
+
+*Fair warning* - Google severely throttles Google Calendar API calls. If
+you click around very quickly, Caldo may briefly stop responding because
+the rate limit will have been exceeded.
+
 ## Elevator pitch please
 The vision: Caldo is short for Calendar do, and it means soup in Spanish. It
 turns your Google Calendar events into todo-lists. Upon marking them as
@@ -29,33 +35,36 @@ visually reflect the change.
 
 ### Mark events as "completed" in Google Calendar
 
-- Little checkboxes beside each event to mark as completed
+- Checkboxes beside each event to mark as completed
 - Clicking will change event color to green, indicating that it was
 	done.
 - Removing the check will change the color to grey, indicating that it
 	is not done.
 
-
-## What will it do?
-
-One core features are remaining:
 ### Record metadata to events upon completion
 
 - Put a single tag in the title of your event to indicate that you want to
 	record some data about it upon completion. For example "Run -
-	{{minutes}}" will ask you for the number of minutes it took you to
+	{minutes}" will ask you for the number of minutes it took you to
 	complete the task. Assuming you input 30 minutes, Caldo will rename the event
 	to "Run - 30 minutes".
 
-Hey, that's a lot of work you say! Yeah, it is. This is my goal for the
-RMU course, afterwards I would like to continue adding the following
-features:
+## What will it do?
+
+The above functionality is all that was planned for completion during
+the Mendicant University core skills course. The following features may
+be implemented later:
 
 - Metadata in the description of an event
 - Customize event colors so everything isn't necessarily green.
 - Choose the calendar you want to use (currently defaults to your
 	primary calendar)
-- iPhone friendly layout
+- Customize timezone
+- iPhone specific layout
+- Backbone.js client side rendering of Todos
+- Ability to uncheck events that store data and have it ask for the
+  variable value upon marking complete again.
+- Some way to access the data you record, for example through a REST api.
 
 ## Run the tests
 Uses Rspec, to run the suite: `bundle install && rake`
