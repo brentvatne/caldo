@@ -29,7 +29,7 @@ module Caldo
       end
 
       def important?
-        self.summary.match(/\*important\*/)
+        !!self.summary.match(/\*important\*/)
       end
     end
   end

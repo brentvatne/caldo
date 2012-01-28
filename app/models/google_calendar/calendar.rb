@@ -34,12 +34,17 @@ module Caldo
       end
 
       def update_event(params)
-        send_update_request({
+        response = send_update_request({
           'eventId'   => params[:id],
           'startDate' => params[:date],
           'colorId'   => COLORS[params[:color]] || COLORS[:grey],
           'summary'   => params[:summary]
         })
+        if response
+          Event.new(response)
+        else
+          false
+        end
       end
 
       private
@@ -62,16 +67,12 @@ module Caldo
         event.color_id = params['colorId']
         event.summary  = params['summary'] if params['summary']
 
-        p event
-
-        result = client.execute!(
+        schema_to_hash(client.execute!(
           :api_method  => calendar_api.events.update,
           :parameters  => default_options.merge('eventId' => event.id),
           :body_object => event,
           :headers => {'Content-Type' => 'application/json'}
-        )
-
-        result.data.updated
+        ).data)
       end
 
       def format_date(date)
@@ -82,6 +83,20 @@ module Caldo
         params.merge!(default_options)
         client.execute(:api_method => calendar_api.events.list,
                        :parameters => params).data.to_hash["items"]
+      end
+
+      def schema_to_hash(schema)
+        if schema
+          { "id"          => schema.id,
+            "summary"     => schema.summary,
+            "description" => schema.description,
+            "location"    => schema.location,
+            "start"       => { "date" => schema.start.date },
+            "end"         => { "date" => schema.end.date },
+            "color_id"    => schema.color_id }
+        else
+          nil
+        end
       end
     end
   end

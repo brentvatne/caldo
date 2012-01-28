@@ -46,6 +46,7 @@ $(function() {
 			summary: todo_summary
     }, function(success) {
 			if (success) {
+				console.log(success);
 				//change element summary
 			} else {
 				$todo.toggleClass('done');

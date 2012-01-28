@@ -24,5 +24,11 @@ module Caldo
         date_time.strftime("%l:%M %p").strip
       end
     end
+
+    def to_json
+      { :event_id   => todo.event_id,   :summary   => summary,
+        :complete   => todo.complete,   :important => todo.important,
+        :date       => date }.to_json
+    end
   end
 end
