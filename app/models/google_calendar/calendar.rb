@@ -40,6 +40,9 @@ module Caldo
           'colorId'   => COLORS[params[:color]] || COLORS[:grey],
           'summary'   => params[:summary]
         })
+
+        p response
+
         if response
           Event.new(response)
         else
@@ -91,8 +94,8 @@ module Caldo
             "summary"     => schema.summary,
             "description" => schema.description,
             "location"    => schema.location,
-            "start"       => { "date" => schema.start.date },
-            "end"         => { "date" => schema.end.date },
+            "start"       => { "date" => schema.start.date || schema.start.dateTime },
+            "end"         => { "date" => schema.end.date   || schema.start.dateTime },
             "color_id"    => schema.color_id }
         else
           nil

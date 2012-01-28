@@ -44,10 +44,11 @@ $(function() {
       date: todo_date,
 			variable: variable_input,
 			summary: todo_summary
-    }, function(success) {
-			if (success) {
-				console.log(success);
-				//change element summary
+    }, function(success_response) {
+			if (success_response) {
+				if (success_response.summary) {
+					$todo.find(".todo-summary").text(success_response.summary);
+				}
 			} else {
 				$todo.toggleClass('done');
 				$todo.find("input").attr("checked", false)
