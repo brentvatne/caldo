@@ -21,9 +21,9 @@ module Caldo
     end
 
     post '/todos/complete', :authenticates => true do
-      # TODO: Replace :id => .. to :event_id => params[:event_id]
       content_type 'application/json', :charset => 'utf-8'
-      todo = Todo.mark_complete(:id       => params[:id],
+
+      todo = Todo.mark_complete(:event_id => params[:event_id],
                                 :date     => params[:date],
                                 :summary  => params[:summary],
                                 :variable => params[:variable])
@@ -32,8 +32,9 @@ module Caldo
 
     post '/todos/incomplete', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
-      (Todo.mark_incomplete(:id   => params[:id],
-                            :date => params[:date])
+
+      (Todo.mark_incomplete(:event_id => params[:event_id],
+                            :date     => params[:date])
       ).to_json
     end
   end

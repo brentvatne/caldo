@@ -1,7 +1,5 @@
 require 'google/api_client'
 require_relative 'calendar'
-require 'date'
-require 'time'
 
 module Caldo
   module GoogleCalendar

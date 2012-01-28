@@ -45,8 +45,9 @@ module Caldo
     #
     # Returns a truthy value if it was a success, or a falsey if not
     def self.mark_complete(params)
-      summary = substitute_variable(params[:summary], params[:variable])
-      event = service.update_event(params.merge(:color => :green, :summary => summary))
+      summary     = substitute_variable(params[:summary], params[:variable])
+      params[:id] = params[:event_id]
+      event       = service.update_event(params.merge(:color => :green, :summary => summary))
       Todo.new(event)
     end
 
@@ -58,6 +59,7 @@ module Caldo
     #
     # Returns a truthy value if it was a success, or a falsey if not
     def self.mark_incomplete(params)
+      params[:id] = params[:event_id]
       !!service.update_event(params.merge(:color => :grey))
     end
 

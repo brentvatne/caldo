@@ -27,12 +27,12 @@ $(function() {
 			callback($todo, input_value);
 			$.modal.close();
 		});
-		//need to hook into modal closing callback and if not sent, disable check
+		//TODO: need to hook into modal closing callback and if not sent, disable check
 		//but so it does not fire with $.modal.close()
 	});
 
 	var update_completeness_request = (function($todo, variable_input) {
-    var todo_id        = $todo.data("event-id");
+    var todo_event_id  = $todo.data("event-id");
     var todo_date      = $todo.data("date");
     var todo_summary   = $todo.data("summary");
 		var todo_completed = !!$todo.find("input").attr("checked");
@@ -40,8 +40,8 @@ $(function() {
 		var path = todo_completed ? '/todos/complete' : '/todos/incomplete';
 
     $.post(path, {
-      id:   todo_id,
-      date: todo_date,
+      event_id: todo_event_id,
+      date:     todo_date,
 			variable: variable_input,
 			summary: todo_summary
     }, function(success_response) {

@@ -17,7 +17,6 @@ module Caldo
     end
 
     def date
-      p todo.start_date
       DateTime.parse(todo.start_date).strftime("%A")
     end
 
@@ -34,7 +33,7 @@ module Caldo
       return false.to_json if todo.nil?
 
       { :event_id   => todo.event_id,   :summary   => summary,
-        :complete   => todo.complete,   :important => todo.important,
+        :complete   => todo.complete?,  :important => todo.important?,
         :date       => date }.to_json
     end
   end
