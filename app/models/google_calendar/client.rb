@@ -8,16 +8,11 @@ module Caldo
     class Client
       attr_reader :calendar
 
-      def initialize(params)
-        self.delegate       = Google::APIClient.new
-        self.client_id     = params[:client_id]
-        self.client_secret = params[:client_secret]
-        self.scope         = params[:scope] || default_options[:scope]
-        self.redirect_uri  = params[:redirect_uri]
-        self.code          = params[:code]
-        self.token_pair    = params[:token_pair]
-        self.state         = params[:state]
-        self.calendar      = Calendar.new(self)
+      def initialize
+        self.delegate = Google::APIClient.new
+        self.scope    = default_options[:scope]
+        yield self if block_given?
+        self.calendar = Calendar.new(self)
       end
 
       def method_missing(method, *args, &block)
@@ -75,10 +70,6 @@ module Caldo
         delegate.authorization
       end
 
-      private
-      attr_accessor :delegate
-      attr_writer :calendar
-
       def client_id=(new_client_id)
         delegate.authorization.client_id = new_client_id
       end
@@ -102,6 +93,10 @@ module Caldo
       def state=(new_state)
         delegate.authorization.state = new_state
       end
+
+      private
+      attr_accessor :delegate
+      attr_writer   :calendar
 
       def refresh_token?
         delegate.authorization.refresh_token

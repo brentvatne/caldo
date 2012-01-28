@@ -4,6 +4,9 @@ require 'sinatra/flash'
 require 'sass'
 
 module Caldo
+
+  # This portion of the app handles Sinatra configuration and asset 
+  # serving functionality.
   class App < Sinatra::Application
     enable :sessions
 
@@ -25,6 +28,9 @@ module Caldo
     end
 
     private
+    # Checks the disk to see if the given filename exists as a scss spreadsheet
+    #
+    # Returns true if it does exist, false if not
     def stylesheet_exists?(asset)
       File.exists?(File.join(settings.root, settings.scss_dir, asset + ".scss"))
     end

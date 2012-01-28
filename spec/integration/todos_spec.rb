@@ -3,7 +3,7 @@ require_relative '../integration_helper'
 
 describe 'todo functionality' do
   describe 'listing' do
-    it 'lists all of the events on the day' do
+    xit 'lists all of the events on the day' do
       visit '/today'
       page.should have_content "run"
       page.should have_content "fish"
