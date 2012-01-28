@@ -13,12 +13,12 @@ module Caldo
     enable :static
     set :root,          File.dirname(__FILE__)
     set :public_folder, File.dirname(__FILE__) + '/assets/static'
-    set :scss_dir,     'assets/dynamic/stylesheets'
+    set :scss_dir,     '/assets/dynamic/stylesheets'
 
     get '/stylesheets/:file.css' do
       template = params[:file]
       if stylesheet_exists?(template)
-        scss :"../#{settings.scss_dir}/#{template}"
+          scss :"../#{settings.scss_dir}/#{template}"
       else
         halt 404
       end
