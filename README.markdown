@@ -66,6 +66,11 @@ be implemented later:
   variable value upon marking complete again.
 - Some way to access the data you record, for example through a REST api.
 
+## Known bugs
+
+- Crashes on production server when calendar information contains UTF-8
+  characters.
+
 ## Run the tests
 Uses Rspec, to run the suite: `bundle install && rake`
 *Tested with: Ruby 1.9.3p0*
