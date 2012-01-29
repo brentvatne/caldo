@@ -19,5 +19,16 @@ describe Caldo::Todo do
       minutes = "30"
       Caldo::Todo.substitute_variable(summary, minutes).should eq("Run - 30 minutes")
     end
+
+    it "should not detect a variable if it's not at the end of the summary" do
+      todo.summary = "{minutes} Run"
+      todo.summary_variable.should eq("")
+    end
+
+    it "should not replace a variable if it's not at the end of the summary" do
+      summary = "{minutes} Run"
+      minutes = "30"
+      Caldo::Todo.substitute_variable(summary, minutes).should eq(summary)
+    end
   end
 end

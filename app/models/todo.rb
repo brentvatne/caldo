@@ -3,8 +3,10 @@ require 'date'
 module Caldo
   # A variable can appear in the summary of a Todo, for example "Run {minutes}"
   VARIABLE_TAG        = /(\{)(?<variable>[\w\s]+)(\})/
-  VARIABLE_EXPRESSION = /(?<task>.*?)#{VARIABLE_TAG}/
+  VARIABLE_EXPRESSION = /(?<task>.*?)#{VARIABLE_TAG}\s*$/
 
+  # The important tag *important* causes an event to be displayed on several days
+  # before when it actually occurs
   IMPORTANT_TAG = /\*important\*/
 
   class Todo
@@ -100,6 +102,9 @@ module Caldo
       !!self.summary.match(IMPORTANT_TAG)
     end
 
+    # Gets a variable name from the summary, if one is given
+    #
+    # Returns the variable name string if there is one, or an empty string.
     def summary_variable
       matches = summary.match(VARIABLE_EXPRESSION)
       matches ? matches[:variable] : ""

@@ -55,16 +55,18 @@ The above functionality is all that was planned for completion during
 the Mendicant University core skills course. The following features may
 be implemented later:
 
-- Metadata in the description of an event
-- Customize event colors so everything isn't necessarily green.
+- Mobile (concentrating on iPhone) specific layout
 - Choose the calendar you want to use (currently defaults to your
+- Get more information about the Todo - descrpition, location, link to
+	Google Calendar event. Hidden unless you trigger it somehow.
 	primary calendar)
-- Customize timezone
-- iPhone specific layout
 - Backbone.js client side rendering of Todos
+- Customize timezone
 - Ability to uncheck events that store data and have it ask for the
   variable value upon marking complete again.
 - Some way to access the data you record, for example through a REST api.
+- Customize event colors so everything isn't necessarily green.
+- Metadata in the description of an event
 
 ## Known bugs
 
