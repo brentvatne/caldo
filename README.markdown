@@ -72,7 +72,9 @@ be implemented later:
 
 - Crashes on production server when calendar information contains UTF-8
   characters.
+- Day is displayed on important, even if it is the day of the event
 
 ## Run the tests
 Uses Rspec, to run the suite: `bundle install && rake`
 *Tested with: Ruby 1.9.3p0*
+
