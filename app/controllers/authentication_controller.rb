@@ -1,21 +1,23 @@
 require_relative '../app'
 require_relative '../models/google_calendar/client'
 require_relative '../models/google_calendar/calendar'
+require_relative '../models/google_calendar/throttler'
 require_relative '../models/token_pair'
 
 module Caldo
-
   GoogleAPIGateway = Object.new
 
   class << GoogleAPIGateway
-    def [](uid)
+    def clients
       @clients ||= {}
-      @clients[uid]
+    end
+
+    def [](uid)
+      clients[uid]
     end
 
     def []=(uid, client)
-      @clients ||= {}
-      @clients[uid] = client
+      clients[uid] = GoogleCalendar::Throttler.new(client, 3)
     end
   end
 
@@ -47,22 +49,13 @@ module Caldo
     end
 
     private
-
-    def generate_uid
-      rand(38**8).to_s(36)
-    end
-
-    def session_uid
-      session[:uid]
-    end
-
     # Instantiates the API client and makes it available to the local thread,
     # or initiates the authroization process if the user is not already
     # authorized
     def initialize_api_client
-      if client = GoogleAPIGateway[session_uid]
+      if client = GoogleAPIGateway[session[:uid]]
         client.fetch_access_token unless client.has_valid_access_token?
-        Thread.current['uid'] = session_uid
+        Thread.current['uid'] = session[:uid]
       else
         session[:uid] = generate_uid unless session[:uid]
         client = new_client_for_session
@@ -70,8 +63,12 @@ module Caldo
       end
     end
 
+    def generate_uid
+      rand(38**8).to_s(36)
+    end
+
     def new_client_for_session
-      GoogleAPIGateway[session_uid] = new_client
+      GoogleAPIGateway[session[:uid]] = new_client
     end
 
     def new_client
