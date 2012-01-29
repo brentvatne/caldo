@@ -113,7 +113,7 @@ module Caldo
     private
     # Returns the thread local Google Calendar API Client wrapper instance
     def self.service
-      Thread.current['GoogleCalendar']
+      Caldo::GoogleAPIGateway[Thread.current['uid']].calendar
     end
   end
 end

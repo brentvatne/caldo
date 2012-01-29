@@ -4,6 +4,21 @@ require_relative '../models/google_calendar/calendar'
 require_relative '../models/token_pair'
 
 module Caldo
+
+  GoogleAPIGateway = Object.new
+
+  class << GoogleAPIGateway
+    def [](uid)
+      @clients ||= {}
+      @clients[uid]
+    end
+
+    def []=(uid, client)
+      @clients ||= {}
+      @clients[uid] = client
+    end
+  end
+
   class App < Sinatra::Application
     attr_accessor :client, :calendar
 
@@ -12,7 +27,7 @@ module Caldo
     # and initialize the session token information, then redirect to the path they
     # wanted to visit previously.
     get '/oauth2callback' do
-      initialize_api_client
+      client = new_client_for_session
       client.fetch_access_token
 
       token_pair = TokenPair.create(client.authorization_details)
@@ -26,29 +41,47 @@ module Caldo
     # delete their token key from the database.
     get '/sign_out' do
       session[:token_pair_id] = nil
+      session[:uid] = nil
       flash[:notice] = "You have been signed out! See you again soon."
       redirect to('/')
     end
 
     private
 
+    def generate_uid
+      rand(38**8).to_s(36)
+    end
+
+    def session_uid
+      session[:uid]
+    end
+
     # Instantiates the API client and makes it available to the local thread,
     # or initiates the authroization process if the user is not already
     # authorized
     def initialize_api_client
-      self.client = GoogleCalendar::Client.new do |c|
+      if client = GoogleAPIGateway[session_uid]
+        client.fetch_access_token unless client.has_valid_access_token?
+        Thread.current['uid'] = session_uid
+      else
+        session[:uid] = generate_uid unless session[:uid]
+        client = new_client_for_session
+        redirect client.authorization_uri, 303 unless authorization_in_progress?
+      end
+    end
+
+    def new_client_for_session
+      GoogleAPIGateway[session_uid] = new_client
+    end
+
+    def new_client
+      GoogleCalendar::Client.new do |c|
         c.client_id     = settings.client_id
         c.client_secret = settings.client_secret
         c.token_pair    = session_token_pair
         c.state         = params[:state] || request.path_info
         c.redirect_uri  = to('/oauth2callback')
         c.code          = params[:code]
-      end
-
-      if client.has_valid_access_token?
-        Thread.current['GoogleCalendar'] = self.client.calendar
-      else
-        redirect client.authorization_uri, 303 unless authorization_in_progress?
       end
     end
 

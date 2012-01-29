@@ -13,6 +13,24 @@ module Caldo
         self.calendar = Calendar.new(self)
       end
 
+      def execute(args)
+        @queue ||= []
+        command = lambda { delegate.execute(args) }
+        @queue << command
+
+        unless @queue.size == 1
+          puts "sleeping....*******"
+          sleep 0.3
+        end
+
+        if @queue.first == command
+          result = command.call
+          @queue.shift
+        end
+
+        result
+      end
+
       def method_missing(method, *args, &block)
         delegate.send(method, *args, &block)
       end
@@ -59,7 +77,7 @@ module Caldo
           delegate.authorization.update_token!(new_token_pair.to_hash)
 
           if refresh_token? && delegate.authorization.expired?
-            delegate.authorization.fetch_access_token!
+            fetch_access_token
           end
         end
       end

@@ -27,6 +27,7 @@ module Caldo
                                 :date     => params[:date],
                                 :summary  => params[:summary],
                                 :variable => params[:variable])
+
       TodoPresenter.new(todo).to_json
     end
 

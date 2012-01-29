@@ -68,12 +68,14 @@ module Caldo
         event.color_id = params['colorId']
         event.summary  = params['summary'] if params['summary']
 
-        schema_to_hash(client.execute!(
+        response = client.execute(
           :api_method  => calendar_api.events.update,
           :parameters  => default_options.merge('eventId' => event.id),
           :body_object => event,
           :headers => {'Content-Type' => 'application/json'}
-        ).data)
+        )
+
+        schema_to_hash(response.data) if response
       end
 
       def format_date(date)
