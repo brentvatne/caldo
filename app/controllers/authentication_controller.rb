@@ -35,7 +35,6 @@ module Caldo
       token_pair = TokenPair.create(client.authorization_details)
       session[:token_pair_id] = token_pair.id
 
-      flash[:success] = "Sign in was successful, well done!"
       redirect to(client.path_before_signing_in)
     end
 
@@ -43,6 +42,7 @@ module Caldo
     # delete their token key from the database.
     get '/sign_out' do
       session[:token_pair_id] = nil
+      GoogleAPIGateway[session[:uid]] = nil
       session[:uid] = nil
       flash[:notice] = "You have been signed out! See you again soon."
       redirect to('/')

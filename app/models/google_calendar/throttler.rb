@@ -13,7 +13,6 @@ module Caldo
       def method_missing(sym, *args, &block)
         command = lambda { @client.send(sym, *args, &block) }
         queue << command
-
         execute_when_ready(command)
       end
 
