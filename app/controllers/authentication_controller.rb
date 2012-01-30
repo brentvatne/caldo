@@ -53,8 +53,9 @@ module Caldo
     # or initiates the authroization process if the user is not already
     # authorized
     def initialize_api_client
-      if client = GoogleAPIGateway[session[:uid]]
-        client.fetch_access_token unless client.has_valid_access_token?
+      client = GoogleAPIGateway[session[:uid]]
+
+      if client && client.has_valid_access_token?
         Thread.current['uid'] = session[:uid]
       else
         session[:uid] = generate_uid unless session[:uid]
