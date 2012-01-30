@@ -9,9 +9,11 @@ module Caldo
   # serving functionality.
   class App < Sinatra::Application
     enable :sessions
+    enable :logging
 
-    set :client_id,     ENV['CALDO_GOOGLE_API_CLIENT_ID']
-    set :client_secret, ENV['CALDO_GOOGLE_API_CLIENT_SECRET']
+    set :client_id,     "329628485114-jq4jh70apt41vsdbdv0hm7st5eie652h.apps.googleusercontent.com"
+    set :client_secret, "fdg2tceyi9h1wUCtC-r8zSIh"
+
 
     enable :static
     set :root,          File.dirname(__FILE__)
