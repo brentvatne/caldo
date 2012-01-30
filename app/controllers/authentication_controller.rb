@@ -63,6 +63,7 @@ module Caldo
       end
     end
 
+    # Generates a unique string to key the GoogleAPIGateway multiton
     def generate_uid
       rand(38**8).to_s(36)
     end

@@ -5,7 +5,7 @@ require 'sass'
 
 module Caldo
 
-  # This portion of the app handles Sinatra configuration and asset 
+  # This portion of the app handles Sinatra configuration and asset
   # serving functionality.
   class App < Sinatra::Application
     enable :sessions
