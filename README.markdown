@@ -15,10 +15,6 @@
 
 Alternatively, you give it a test run: [http://caldo.webbyapp.com/](http://caldo.webbyapp.com/)
 
-*Fair warning* - Google severely throttles Google Calendar API calls. If
-you click around very quickly, Caldo may briefly stop responding because
-the rate limit will have been exceeded.
-
 ## Elevator pitch please
 The vision: Caldo is short for Calendar do, and it means soup in Spanish. It
 turns your Google Calendar events into todo-lists. Upon marking them as
@@ -31,7 +27,7 @@ visually reflect the change.
 
 - Authenticate using OAuth2
 - List events by day, accesible by path `/2012-01-14` (`yyyy-mm-dd`)
-- Include events tagged as *important* 5 days before they come due.
+- Include events tagged as \*important\* 5 days before they come due.
 
 ### Mark events as "completed" in Google Calendar
 
@@ -55,8 +51,10 @@ The above functionality is all that was planned for completion during
 the Mendicant University core skills course. The following features may
 be implemented later:
 
+- Help section that describes the different tags
 - Mobile (concentrating on iPhone) specific layout
 - Choose the calendar you want to use (currently defaults to your
+  primary)
 - Get more information about the Todo - descrpition, location, link to
 	Google Calendar event. Hidden unless you trigger it somehow.
 	primary calendar)
