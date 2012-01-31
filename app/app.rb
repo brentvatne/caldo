@@ -9,6 +9,7 @@ module Caldo
   # serving functionality.
   class App < Sinatra::Application
     enable :sessions
+    enable :logging
 
     set :client_id,     ENV['CALDO_GOOGLE_API_CLIENT_ID']
     set :client_secret, ENV['CALDO_GOOGLE_API_CLIENT_SECRET']
