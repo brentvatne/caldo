@@ -19,6 +19,7 @@ module Caldo
           update_last_request_time
           queue.shift.call
         else
+          STDERR.puts "sleep!"
           sleep(sleep_duration)
           execute_when_ready(command)
         end
