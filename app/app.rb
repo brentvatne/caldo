@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'sinatra/ratpack'
 require 'sinatra/flash'
 require 'sass'
+require 'coffee-script'
 
 module Caldo
 
@@ -11,19 +12,33 @@ module Caldo
     enable :sessions
     enable :logging
 
-    set :client_id,     "329628485114-jq4jh70apt41vsdbdv0hm7st5eie652h.apps.googleusercontent.com"
-    set :client_secret, "fdg2tceyi9h1wUCtC-r8zSIh"
-
+    set :client_id,     ENV['GOOGLE_ID']
+    set :client_secret, ENV['GOOGLE_SECRET']
 
     enable :static
-    set :root,          File.dirname(__FILE__)
-    set :public_folder, File.dirname(__FILE__) + '/assets/static'
-    set :scss_dir,     '/assets/dynamic/stylesheets'
+    set :root,           File.dirname(__FILE__)
+    set :dynamic_assets, File.dirname(__FILE__) + '/assets/dynamic'
+    set :static_assets,  File.dirname(__FILE__) + '/assets/static'
+    set :public_folder,  settings.static_assets
+    set :scss_dir,       '/assets/dynamic/stylesheets'
+    set :coffee_dir,     '/assets/dynamic/coffeescripts'
+
+    # Both of these get requests are not even called if matching files are found
+    # in the static assets directory
 
     get '/stylesheets/:file.css' do
       template = params[:file]
       if stylesheet_exists?(template)
           scss :"../#{settings.scss_dir}/#{template}"
+      else
+        halt 404
+      end
+    end
+
+    get '/javascripts/:file.js' do
+      coffee_file = params[:file]
+      if coffeescript_exists?(coffee_file)
+          coffee :"../#{settings.coffee_dir}/#{coffee_file}"
       else
         halt 404
       end
@@ -35,6 +50,13 @@ module Caldo
     # Returns true if it does exist, false if not
     def stylesheet_exists?(asset)
       File.exists?(File.join(settings.root, settings.scss_dir, asset + ".scss"))
+    end
+
+    # Checks the disk to see if the given filename exists as coffeescript
+    #
+    # Returns true if it does exist, false if not
+    def coffeescript_exists?(asset)
+      File.exists?(File.join(settings.root, settings.coffee_dir, asset + ".coffee"))
     end
   end
 end

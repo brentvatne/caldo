@@ -1,4 +1,5 @@
 require 'date'
+require_relative '../models/todo'
 
 module Caldo
   # This class is responsible for any todo presentation logic used within views.

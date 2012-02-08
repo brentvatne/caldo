@@ -29,6 +29,10 @@ module Caldo
       }.sort
     end
 
+    def self.find(id)
+      new(service.find_event(id))
+    end
+
     # Todos are sorted by start date
     def <=>(other)
       self.start_date <=> other.start_date

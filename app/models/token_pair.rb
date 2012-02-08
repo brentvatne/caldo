@@ -28,8 +28,9 @@ module Caldo
       update_token!(attrs)
     end
 
+    # Only set the refresh token once.
     def update_token!(object)
-      self.refresh_token = object.refresh_token || self.refresh_token
+      self.refresh_token = self.refresh_token || object.refresh_token
       self.access_token  = object.access_token
       self.expires_in    = object.expires_in
       self.issued_at     = object.issued_at

@@ -5,6 +5,7 @@ gem 'sinatra', '~> 1.3.2'
 gem 'shotgun', '~> 0.9'
 gem 'ratpack', '~> 0.1.3'
 gem 'sinatra-flash', '~> 0.3.0'
+gem 'coffee-script'
 
 # Assets
 gem 'sass', '~> 3.1.11'
@@ -22,5 +23,6 @@ group :test do
   gem 'capybara', '~> 1.1.2'
   gem 'rack-test', '~> 0.6.1'
   gem 'timecop', '~> 0.3.5'
+  gem 'mocha', '~> 0.10.3'
 end
 

@@ -1,5 +1,4 @@
 require 'json'
-require_relative 'authentication_controller'
 require_relative '../presenters/date_presenter'
 require_relative '../presenters/todo_presenter'
 
@@ -13,13 +12,27 @@ module Caldo
       redirect to("/#{Date.today.to_s}")
     end
 
-    get %r{(\d{4}-\d{2}-\d{2})}, :authenticates => true do
+    get %r{^\/(\d{4}-\d{2}-\d{2})}, :authenticates => true do
       date = params[:captures].first
 
       erb :todos, :locals => { :todos => Todo.all_on_date(date),
                                :date  => DatePresenter.new(date) }
     end
 
+    get '/todos/:date/:id' do
+      content_type 'application/json', :charset => 'utf-8'
+
+      Todo.find(params[:id]).to_json
+    end
+
+    get '/todos/:date' do
+      content_type 'application/json', :charset => 'utf-8'
+
+      Todo.all_on_date(params[:date]).to_json
+    end
+
+
+    # Change this to todo /date/id/complete
     post '/todos/complete', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 

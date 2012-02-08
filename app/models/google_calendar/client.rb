@@ -26,12 +26,12 @@ module Caldo
         delegate.authorization.state
       end
 
-      def authorization_uri
-        if access_token? && !refresh_token?
-          forced_authorization_uri
-        else
-          auto_approval_uri
-        end
+      # Auto approval does not bother the user to approve the use. The first time
+      # you use auto approval, it will give you a refresh token - if you lose the
+      # refresh token, you need to ask for it again using force.
+      def authorization_uri(force=false)
+        return forced_authorization_uri if force
+        auto_approval_uri
       end
 
       def forced_authorization_uri
@@ -101,7 +101,7 @@ module Caldo
       end
 
       def enable_auto_approval(path)
-        path.gsub("&approval_prompt=force","")
+        path.gsub("&approval_prompt=auto","")
       end
 
       def default_options

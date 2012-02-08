@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_relative '../../app/models/todo'
 
 describe Caldo::Todo do
   let(:todo) { Caldo::Todo.new(:summary => "Hello", :start => "today", :end => "tomorrow") }
