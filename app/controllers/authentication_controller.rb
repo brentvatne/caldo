@@ -30,7 +30,7 @@ module Caldo
     # wanted to visit previously.
     get '/oauth2callback' do
       client = new_client_for_session
-      client.fetch_access_token_from_params
+      client.fetch_access_token
 
       # new to query here for the user information
 

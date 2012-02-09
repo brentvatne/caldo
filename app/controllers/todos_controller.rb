@@ -19,13 +19,13 @@ module Caldo
                                :date  => DatePresenter.new(date) }
     end
 
-    get '/todos/:date/:id' do
-      content_type 'application/json', :charset => 'utf-8'
+    # get '/todos/:date/:id', :authenticates => true do
+    #   content_type 'application/json', :charset => 'utf-8'
 
-      Todo.find(params[:id]).to_json
-    end
+    #   Todo.find(params[:id]).to_json
+    # end
 
-    get '/todos/:date' do
+    get '/todos/:date', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 
       Todo.all_on_date(params[:date]).to_json
