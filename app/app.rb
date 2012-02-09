@@ -26,8 +26,8 @@ module Caldo
     # Both of these get requests are not even called if matching files are found
     # in the static assets directory
 
-    get '/stylesheets/:file.css' do
-      template = params[:file]
+    get '/stylesheets/*.css' do
+      template = params[:splat].first
       if stylesheet_exists?(template)
           scss :"../#{settings.scss_dir}/#{template}"
       else
@@ -35,8 +35,8 @@ module Caldo
       end
     end
 
-    get '/javascripts/:file.js' do
-      coffee_file = params[:file]
+    get '/javascripts/*.js' do
+      coffee_file = params[:splat].first
       if coffeescript_exists?(coffee_file)
           coffee :"../#{settings.coffee_dir}/#{coffee_file}"
       else
