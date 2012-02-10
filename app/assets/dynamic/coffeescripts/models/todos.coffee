@@ -1,6 +1,11 @@
-class Todos extends Backbone.Collection
-  model: app.Todo
-  url: '/todos/2012-01-01'
+$ ->
+  class Todos extends Backbone.Collection
+    initialize: () ->
 
-@app = window.app || {}
-@app.Todos = new Todos
+    model: caldo.Todo
+
+    url: () -> '/todos/' + caldo.date
+
+  @caldo = window.caldo || {}
+  @caldo.Todos = new Todos
+  @caldo.date = moment().format("YYYY-MM-DD")

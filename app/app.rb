@@ -5,7 +5,6 @@ require 'sass'
 require 'coffee-script'
 
 module Caldo
-
   # This portion of the app handles Sinatra configuration and asset
   # serving functionality.
   class App < Sinatra::Application
@@ -25,11 +24,10 @@ module Caldo
 
     # Both of these get requests are not even called if matching files are found
     # in the static assets directory
-
     get '/stylesheets/*.css' do
       template = params[:splat].first
       if stylesheet_exists?(template)
-          scss :"../#{settings.scss_dir}/#{template}"
+        scss :"../#{settings.scss_dir}/#{template}"
       else
         halt 404
       end
@@ -38,7 +36,7 @@ module Caldo
     get '/javascripts/*.js' do
       coffee_file = params[:splat].first
       if coffeescript_exists?(coffee_file)
-          coffee :"../#{settings.coffee_dir}/#{coffee_file}"
+        coffee :"../#{settings.coffee_dir}/#{coffee_file}"
       else
         halt 404
       end

@@ -15,8 +15,10 @@ module Caldo
     get %r{^\/(\d{4}-\d{2}-\d{2})}, :authenticates => true do
       date = params[:captures].first
 
-      erb :todos, :locals => { :todos => Todo.all_on_date(date),
-                               :date  => DatePresenter.new(date) }
+      File.read('app/views/todos.html')
+
+      # erb :todos, :locals => { :todos => Todo.all_on_date(date),
+      #                          :date  => DatePresenter.new(date) }
     end
 
     # get '/todos/:date/:id', :authenticates => true do
@@ -28,7 +30,7 @@ module Caldo
     get '/todos/:date', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 
-      Todo.all_on_date(params[:date]).map{|todo| TodoPresenter.new(todo).to_json }.to_json
+      Todo.all_on_date(params[:date]).map{|todo| TodoPresenter.new(todo).to_hash }.to_json
     end
 
 

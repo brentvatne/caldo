@@ -1,5 +1,5 @@
-class Todo extends Backbone.Model
+$ ->
+  class Todo extends Backbone.Model
 
-@app = window.app || {}
-@app.Todo = Todo
-
+  @caldo = window.caldo || {}
+  @caldo.Todo = Todo
