@@ -20,7 +20,7 @@ body {
   }
 }
 
-.content-container {
+.wrap {
   width: 400px;
   margin: 0 auto;
   .minor-group {
@@ -42,7 +42,7 @@ body {
   }
 }
 
-.todo-list {
+#caldo {
   text-align: center;
   .todos {
     width: 350px;

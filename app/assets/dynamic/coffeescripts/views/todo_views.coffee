@@ -1,11 +1,18 @@
 $ ->
+  class AppView extends Backbone.View
+    id: 'caldo'
+
+    initialize: ->
+      $('.wrap').append(@el)
+      new TodosView(collection: caldo.Todos)
+
   class TodosView extends Backbone.View
     tagName: 'ul'
     className: 'todos'
 
     initialize: ->
       @collection.bind 'reset', @render, @
-      $(".todo-list").append(@el)
+      $("#caldo").append(@el)
 
     render: ->
       $(@el).empty()
@@ -40,4 +47,4 @@ $ ->
       $(@el).html @template(@model.toJSON())
 
   @caldo = window.caldo || {}
-  @caldo.TodosView = TodosView
+  @caldo.AppView = AppView

@@ -5,5 +5,5 @@
 @caldo = window.caldo || {}
 
 $ ->
-  new caldo.TodosView(collection: caldo.Todos)
+  new caldo.AppView
   caldo.Todos.fetch()
