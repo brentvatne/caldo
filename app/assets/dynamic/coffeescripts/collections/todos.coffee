@@ -17,4 +17,3 @@ $ ->
 
   @caldo = window.caldo || {}
   @caldo.Todos = new Todos
-  @caldo.date = moment().format("YYYY-MM-DD")

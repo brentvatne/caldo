@@ -1,9 +1,10 @@
-# Load the entire template
 # Implement check and uncheck
-# Implement important
+# switch to: new caldo.AppView(date: @caldo.Util.extractDateFromURL() || @caldo.Util.todaysDate())
 
 @caldo = window.caldo || {}
 
 $ ->
+  caldo.date = @caldo.Util.extractDateFromURL()
+
   new caldo.AppView
   caldo.Todos.fetch()
