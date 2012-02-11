@@ -5,12 +5,14 @@ class AppView extends Backbone.View
     $('.wrap').append(@el)
     new TodosView(collection: Caldo.Todos)
 
+  setDate: (@date) ->
+
 class TodosView extends Backbone.View
   tagName: 'ul'
   className: 'todos'
 
   initialize: ->
-    @collection.bind 'reset', @render, @
+    @collection.on 'reset', @render, @
     $("#caldo").append(@el)
 
   render: ->
