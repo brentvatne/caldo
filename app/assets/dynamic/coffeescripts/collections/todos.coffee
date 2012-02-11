@@ -1,19 +1,18 @@
-$ ->
-  class Todos extends Backbone.Collection
-    initialize: () ->
+class Todos extends Backbone.Collection
+  initialize: () ->
 
-    model: caldo.Todo
+  model: Caldo.Todo
 
-    complete: ->
-      _.filter @models, (todo) -> todo.isComplete()
+  complete: ->
+    _.filter @models, (todo) -> todo.isComplete()
 
-    incomplete: ->
-      _.reject @models, (todo) -> todo.isComplete()
+  incomplete: ->
+    _.reject @models, (todo) -> todo.isComplete()
 
-    important: ->
-      _.filter @models, (todo) -> todo.isImportant()
+  important: ->
+    _.filter @models, (todo) -> todo.isImportant()
 
-    url: () -> '/todos/' + caldo.date
+  url: () -> '/todos/' + Caldo.date
 
-  @caldo = window.caldo || {}
-  @caldo.Todos = new Todos
+@Caldo = window.Caldo || {}
+@Caldo.Todos = new Todos

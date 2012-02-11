@@ -14,9 +14,17 @@ Util =
 
   # Formats a given date in the form 2012-01-01
   #
-  # Accepts a moment date object or a Date object
-  formatDate: (date) ->
-    date.format("YYYY-MM-DD")
+  # Accepts a moment date object, Date object, or string
+  shortDate: (date) ->
+    moment(date).format("YYYY-MM-DD")
 
-@caldo = window.caldo || {}
-@caldo.Util = Util
+
+  # Formats a given date in the form "Monday, January 1st 2012"
+  #
+  # Accepts a moment date object, Date object, or string
+  humanDate: (date) ->
+    moment(date).add('days',1).format("dddd, MMMM Do YYYY")
+
+
+@Caldo = window.Caldo || {}
+@Caldo.Util = Util

@@ -1,7 +1,6 @@
-$ ->
-  class Todo extends Backbone.Model
-    isComplete:  -> @get("complete")
-    isImportant: -> @get("important")
+class Todo extends Backbone.Model
+  isComplete:  -> @get("complete")
+  isImportant: -> @get("important")
 
-  @caldo = window.caldo || {}
-  @caldo.Todo = Todo
+@Caldo = window.Caldo || {}
+@Caldo.Todo = Todo
