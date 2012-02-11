@@ -1,5 +1,5 @@
 $ ->
-  class TodoList extends Backbone.View
+  class TodosView extends Backbone.View
     tagName: 'ul'
     className: 'todos'
 
@@ -10,9 +10,9 @@ $ ->
     render: ->
       $(@el).empty()
       for todo in @collection.models
-        $(@el).append(new TodoRow(model: todo).render())
+        $(@el).append(new TodoView(model: todo).render())
 
-  class TodoRow extends Backbone.View
+  class TodoView extends Backbone.View
     tagName: 'li'
     className: 'todo'
     template: _.template($('#todo-template').html())
@@ -20,4 +20,4 @@ $ ->
       $(@el).html @template(@model.toJSON())
 
   @caldo = window.caldo || {}
-  @caldo.TodoList = TodoList
+  @caldo.TodosView = TodosView
