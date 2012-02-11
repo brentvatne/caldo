@@ -21,6 +21,7 @@ module Caldo
     set :public_folder,  settings.static_assets
     set :scss_dir,       '/assets/dynamic/stylesheets'
     set :coffee_dir,     '/assets/dynamic/coffeescripts'
+    set :template_dir,   settings.dynamic_assets + '/coffeescripts/templates'
 
     # Both of these get requests are not even called if matching files are found
     # in the static assets directory
@@ -39,6 +40,14 @@ module Caldo
         coffee :"../#{settings.coffee_dir}/#{coffee_file}"
       else
         halt 404
+      end
+    end
+
+
+    helpers do
+      def template(relative_path)
+        template_file = File.join(settings.template_dir, relative_path + ".html")
+        if File.exists?(template_file) then File.read(template_file) else "" end
       end
     end
 

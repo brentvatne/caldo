@@ -13,7 +13,7 @@ module Caldo
     end
 
     get %r{^\/(\d{4}-\d{2}-\d{2})}, :authenticates => true do
-      File.read('app/views/todos.html')
+      erb :todos
     end
 
     get '/todos/:date', :authenticates => true do
