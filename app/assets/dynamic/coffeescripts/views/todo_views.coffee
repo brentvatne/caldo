@@ -5,17 +5,37 @@ $ ->
 
     initialize: ->
       @collection.bind 'reset', @render, @
-      $(".content-container").append(@el)
+      $(".todo-list").append(@el)
 
     render: ->
       $(@el).empty()
       for todo in @collection.models
-        $(@el).append(new TodoView(model: todo).render())
+        klass = switch todo.isComplete()
+          when true
+            CompleteTodoView
+          when false
+            if todo.isImportant() then ImportantTodoView else IncompleteTodoView
 
-  class TodoView extends Backbone.View
+        $(@el).append(new klass(model: todo).render())
+
+  class IncompleteTodoView extends Backbone.View
     tagName: 'li'
-    className: 'todo'
-    template: _.template($('#todo-template').html())
+    className: 'todo incomplete'
+    template: _.template($('#incomplete-todo-template').html())
+    render: ->
+      $(@el).html @template(@model.toJSON())
+
+  class CompleteTodoView extends Backbone.View
+    tagName: 'li'
+    className: 'todo complete'
+    template: _.template($('#complete-todo-template').html())
+    render: ->
+      $(@el).html @template(@model.toJSON())
+
+  class ImportantTodoView extends Backbone.View
+    tagName: 'li'
+    className: 'todo important'
+    template: _.template($('#important-todo-template').html())
     render: ->
       $(@el).html @template(@model.toJSON())
 

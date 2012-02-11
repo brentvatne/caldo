@@ -42,7 +42,7 @@ body {
   }
 }
 
-.task-list {
+.todo-list {
   text-align: center;
   .todos {
     width: 350px;
@@ -73,7 +73,7 @@ body {
         }
       }
 
-      &.done {
+      &.complete {
         opacity: 0.2;
       }
     }
