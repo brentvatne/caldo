@@ -5,10 +5,11 @@ gem 'sinatra', '~> 1.3.2'
 gem 'shotgun', '~> 0.9'
 gem 'ratpack', '~> 0.1.3'
 gem 'sinatra-flash', '~> 0.3.0'
+gem 'thin'
 gem 'coffee-script'
 
 # Assets
-gem 'sass', '~> 3.1.11'
+gem 'sass', '~> 3.1.14'
 
 # Development utilities
 gem 'rake', '~> 0.9.2.2'

@@ -4,7 +4,7 @@
 @caldo = window.caldo || {}
 
 $ ->
-  caldo.date = @caldo.Util.extractDateFromURL()
+  caldo.date = @caldo.Util.extractDateFromURL() || @caldo.Util.todaysDate()
 
   new caldo.AppView
   caldo.Todos.fetch()
