@@ -13,7 +13,13 @@ module Caldo
     end
 
     get %r{^\/(\d{4}-\d{2}-\d{2})}, :authenticates => true do
-      erb :todos
+      date = params[:captures].first
+
+      todos = Todo.all_on_date(date).map { |todo|
+        TodoPresenter.new(todo).to_hash
+      }.to_json
+
+      erb :todos, :locals => { :todos => todos }
     end
 
     get '/todos/:date', :authenticates => true do
