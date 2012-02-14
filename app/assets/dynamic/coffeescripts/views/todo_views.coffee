@@ -57,7 +57,7 @@ class CompleteTodoView extends Backbone.View
   events: "click input[type=checkbox]": "markIncomplete"
 
   markIncomplete: ->
-    console.log "mark incomplete.."
+    @model.save(complete: false)
 
 @Caldo = window.Caldo || {}
 @Caldo.AppView = AppView
