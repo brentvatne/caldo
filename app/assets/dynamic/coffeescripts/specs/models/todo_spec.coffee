@@ -1,5 +1,19 @@
 describe "Todo model", ->
 
+  describe "id", ->
+
+    it "should use the event_id as the id attribute", ->
+      todo = new Caldo.Todo event_id: 1234
+      expect(todo.id).toEqual(1234)
+
+    it "should not be new if it has an event_id attribute", ->
+      todo = new Caldo.Todo event_id: 1234
+      expect(todo.isNew()).toBeFalsy()
+
+    it "should be new if it has no event_id attribute", ->
+      todo = new Caldo.Todo
+      expect(todo.isNew()).toBeTruthy()
+
   describe "state query methods", ->
 
     describe "isImportant", ->

@@ -30,9 +30,12 @@ module Caldo
       }.to_json
     end
 
-    # post '/todos', :authenticates => true do
-      # update
-    # end
+    put '/todos/:date', :authenticates => true do
+      content_type 'application/json', :charset => 'utf-8'
+
+      record = JSON.parse(request.body.read)
+      record.to_json
+    end
 
     # Change this to todo /date/id/complete
     post '/todos/complete', :authenticates => true do

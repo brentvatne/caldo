@@ -20,11 +20,10 @@ class TodosView extends Backbone.View
 
     for todo in @collection.models
       klass = switch todo.isComplete()
-        when true
-          CompleteTodoView
-        when false
-          IncompleteTodoView
+        when true  then CompleteTodoView
+        when false then IncompleteTodoView
       @$el.append(new klass(model: todo).render())
+
 
 class IncompleteTodoView extends Backbone.View
   initialize: ->
@@ -41,12 +40,15 @@ class IncompleteTodoView extends Backbone.View
   events: "click input[type=checkbox]": "markComplete"
 
   markComplete: ->
-    console.log "mark complete.."
+    @model.set(complete: true)
+    @model.save()
 
 
 class CompleteTodoView extends Backbone.View
   tagName: 'li'
+
   className: 'todo complete'
+
   template: _.template($('#complete-todo-template').html())
 
   render: ->
