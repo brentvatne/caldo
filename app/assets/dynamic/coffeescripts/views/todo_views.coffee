@@ -1,11 +1,24 @@
 class AppView extends Backbone.View
   id: 'caldo'
 
-  initialize: ->
+  initialize: (date) ->
     $('.wrap').append(@el)
+    @setDate(date, silent: true)
+    @render()
     new TodosView(collection: Caldo.Todos)
+    if Caldo.preloadData
+      Caldo.Todos.reset(Caldo.preloadData)
+    else
+      Caldo.Todos.fetch()
 
-  setDate: (@date) ->
+  template: _.template($('#caldo-app-template').html())
+
+  render: ->
+    @$el.append(@template(date: Caldo.date))
+
+  setDate: (date, options) ->
+    Caldo.date = date
+    Caldo.Todos.fetch() unless options.silent?
 
 class TodosView extends Backbone.View
   tagName: 'ul'
@@ -14,7 +27,7 @@ class TodosView extends Backbone.View
   initialize: ->
     @collection.on 'reset',  @render, this
     @collection.on 'change', @render, this
-    $("#caldo").append(@el)
+    $(".todos-wrapper").append(@el)
 
   render: ->
     @$el.empty()

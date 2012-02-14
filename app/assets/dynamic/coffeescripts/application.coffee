@@ -1,9 +1,4 @@
 $ ->
-  Caldo.date = Caldo.Util.extractDateFromURL() || Caldo.Util.todaysDate()
+  date = Caldo.Util.extractDateFromURL() || Caldo.Util.todaysDate()
 
-  new Caldo.AppView
-
-  if Caldo.preloadData
-    Caldo.Todos.reset(Caldo.preloadData)
-  else
-    Caldo.Todos.fetch()
+  new Caldo.AppView(date)

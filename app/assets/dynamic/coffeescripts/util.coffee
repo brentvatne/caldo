@@ -18,12 +18,23 @@ Util =
   shortDate: (date) ->
     moment(date).format("YYYY-MM-DD")
 
-
   # Formats a given date in the form "Monday, January 1st 2012"
   #
   # Accepts a moment date object, Date object, or string
   humanDate: (date) ->
-    moment(date).add('days',1).format("dddd, MMMM Do YYYY")
+    moment(date).add('days', 1).format("dddd, MMMM Do")
+
+  # Returns the short date format of the previous date from the date given
+  #
+  # Accepts a moment date object, Date object, or string
+  previousDate: (date) ->
+    @shortDate(moment(date))
+
+  # Returns the short date format of the next date from the date given
+  #
+  # Accepts a moment date object, Date object, or string
+  nextDate: (date) ->
+    @shortDate(moment(date).add('days', 2))
 
 
 @Caldo = window.Caldo || {}
