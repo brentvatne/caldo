@@ -26,4 +26,3 @@ group :test do
   gem 'timecop', '~> 0.3.5'
   gem 'mocha', '~> 0.10.3'
 end
-

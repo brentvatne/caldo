@@ -30,31 +30,32 @@ module Caldo
       }.to_json
     end
 
-    put '/todos/:date', :authenticates => true do
+    put '/todos/:date/:id', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 
-      record = JSON.parse(request.body.read)
-      record.to_json
+      record = JSON.parse(request.body.read).symbolize_keys!
+      todo = Todo.update(record)
+      TodoPresenter.new(todo).to_hash.to_json
     end
 
     # Change this to todo /date/id/complete
-    post '/todos/complete', :authenticates => true do
-      content_type 'application/json', :charset => 'utf-8'
+    # post '/todos/complete', :authenticates => true do
+    #   content_type 'application/json', :charset => 'utf-8'
 
-      todo = Todo.mark_complete(:event_id => params[:event_id],
-                                :date     => params[:date],
-                                :summary  => params[:summary],
-                                :variable => params[:variable])
+    #   todo = Todo.mark_complete(:event_id => params[:event_id],
+    #                             :date     => params[:date],
+    #                             :summary  => params[:summary],
+    #                             :variable => params[:variable])
 
-      TodoPresenter.new(todo).to_json
-    end
+    #   TodoPresenter.new(todo).to_json
+    # end
 
-    post '/todos/incomplete', :authenticates => true do
-      content_type 'application/json', :charset => 'utf-8'
+    # post '/todos/incomplete', :authenticates => true do
+    #   content_type 'application/json', :charset => 'utf-8'
 
-      (Todo.mark_incomplete(:event_id => params[:event_id],
-                            :date     => params[:date])
-      ).to_json
-    end
+    #   (Todo.mark_incomplete(:event_id => params[:event_id],
+    #                         :date     => params[:date])
+    #   ).to_json
+    # end
   end
 end

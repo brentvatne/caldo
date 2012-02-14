@@ -40,8 +40,7 @@ class IncompleteTodoView extends Backbone.View
   events: "click input[type=checkbox]": "markComplete"
 
   markComplete: ->
-    @model.set(complete: true)
-    @model.save()
+    @model.save(complete: true)
 
 
 class CompleteTodoView extends Backbone.View
