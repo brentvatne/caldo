@@ -12,7 +12,8 @@ class TodosView extends Backbone.View
   className: 'todos'
 
   initialize: ->
-    @collection.on 'reset', @render, this
+    @collection.on 'reset',  @render, this
+    @collection.on 'change', @render, this
     $("#caldo").append(@el)
 
   render: ->
