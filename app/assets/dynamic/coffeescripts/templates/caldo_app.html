@@ -1,13 +1,13 @@
 <script type="text/template" id="caldo-app-template">
-  <h1><%= Caldo.Util.humanDate(date) %></h1>
+  <h1 class="date"><%= Caldo.Util.humanDate(date) %></h1>
   <div class="todos-wrapper">
     <!-- todo list goes here -->
   </div>
   <nav class="days-navigator">
-    <a class="previous-day" href="#">
+    <a class="previous-day" href="<%= Caldo.Util.previousDate(date) %>">
       &larr; previous day
     </a>
-    <a class="next-day" href="#">
+    <a class="next-day" href="<%= Caldo.Util.nextDate(date) %>">
       next day &rarr;
     </a>
   </nav>

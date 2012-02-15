@@ -5,20 +5,46 @@ class AppView extends Backbone.View
     $('.wrap').append(@el)
     @setDate(date, silent: true)
     @render()
+
+    Caldo.Todos.on 'reset', @showTodos, this
+
     new TodosView(collection: Caldo.Todos)
     if Caldo.preloadData
       Caldo.Todos.reset(Caldo.preloadData)
     else
       Caldo.Todos.fetch()
 
+  events:
+    "click a.next-day": "nextDay"
+    "click a.previous-day": "previousDay"
+
+  nextDay: (e) ->
+    @setDate(Caldo.Util.nextDate(Caldo.date))
+    e.preventDefault()
+
+  previousDay: (e) ->
+    @setDate(Caldo.Util.previousDate(Caldo.date))
+    e.preventDefault()
+
   template: _.template($('#caldo-app-template').html())
 
   render: ->
     @$el.append(@template(date: Caldo.date))
 
-  setDate: (date, options) ->
+  toggleTodoVisibility: ->
+    @$el.find('.todos-wrapper').fadeToggle()
+
+
+  showTodos: ->
+    @$el.fadeIn('fast')
+
+  setDate: (date, options = {}) ->
     Caldo.date = date
-    Caldo.Todos.fetch() unless options.silent?
+
+    unless options.silent
+      @$el.fadeOut 'fast', =>
+        @$el.find('.date').html(Caldo.Util.humanDate(date))
+      Caldo.Todos.fetch()
 
 class TodosView extends Backbone.View
   tagName: 'ul'

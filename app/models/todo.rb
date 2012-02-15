@@ -34,17 +34,13 @@ module Caldo
     end
 
     def self.update(params)
-      params = params_for_event(params)
-      event = service.update_event(params)
-      Todo.new(event)
-    end
-
-    def params_for_event(params)
       params[:color] = if params[:complete] == true then :green else :grey end
       params[:id]    = params[:event_id]
       params.delete(:event_id)
       params.delete(:complete)
       params.delete(:summary)
+      event = service.update_event(params)
+      Todo.new(event)
     end
 
     # Todos are sorted by start date
