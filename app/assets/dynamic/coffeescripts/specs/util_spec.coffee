@@ -9,6 +9,12 @@ describe 'Util', ->
 			result = Caldo.Util.extractDateFromURL('some/stuff/2012-01-01')
 			expect(result).toEqual '2012-01-01'
 
+  describe 'daysBetween', ->
+    it 'calculates the number of days between two days where the second date
+        is after the first date', ->
+      result = Caldo.Util.daysBetween("2012-01-01", "2012-01-05")
+      expect(result).toEqual 4
+
   describe 'shortDate', ->
     it 'converts a date in the form 2012-01-01 back to the correct form', ->
       result = Caldo.Util.shortDate('2012-01-01')

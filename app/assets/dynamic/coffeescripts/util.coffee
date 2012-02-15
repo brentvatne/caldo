@@ -20,6 +20,19 @@ Util =
     return date if @shortDateRegexp.test(date)
     moment(date).format("YYYY-MM-DD")
 
+  # Calculates the difference in days between the first and second date provided.
+  # If the second date comes before the first, the result will be a negative integer, otherwise
+  # it will be a positive integer
+  #
+  # Example: daysBetween("2012-01-01","2012-01-05")
+  #          # => 4
+  #
+  # Returns the number of days difference between the first and second date provided as a
+  # positive or negative integer
+  daysBetween: (date, otherDate) ->
+    date      = moment(@parsableDate(date))
+    otherDate = moment(@parsableDate(otherDate))
+    otherDate.diff(date, 'days')
 
   # Takes a string like 2012-01-01 and converts it to a Date object. Typically when moment
   # parses 2012-01-01 you end up with 0:00:00 GMT of that date, so anyone who is in a timezone
