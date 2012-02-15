@@ -12,7 +12,9 @@ class Todos extends Backbone.Collection
   important: ->
     _.filter @models, (todo) -> todo.isImportant()
 
-  url: () -> '/todos/' + Caldo.date
+  url: () -> '/todos/' + @date
+
+  setDate: (@date) ->
 
 @Caldo = window.Caldo || {}
 @Caldo.Todos = new Todos

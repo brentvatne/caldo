@@ -1,56 +1,57 @@
 class AppView extends Backbone.View
   id: 'caldo'
 
-  initialize: (date) ->
-    $('.wrap').append(@el)
-    @setDate(date, silent: true)
+  initialize: ->
+    @date       = @options['date']
+    preloadData = @options['preloadData']
+
+    @setDate(@date, silent: true)
     @render()
 
-    Caldo.Todos.on 'reset', @showTodos, this
-
-    new TodosView(collection: Caldo.Todos)
-    if Caldo.preloadData
-      Caldo.Todos.reset(Caldo.preloadData)
-    else
-      Caldo.Todos.fetch()
+    @collection.on 'reset', @showTodos, this
+    new TodosView(collection: @collection, app: this)
+    if preloadData then @collection.reset(preloadData) else @collection.fetch()
 
   events:
-    "click a.next-day": "nextDay"
+    "click a.next-day":     "nextDay"
     "click a.previous-day": "previousDay"
 
   nextDay: (e) ->
-    @setDate(Caldo.Util.nextDate(Caldo.date))
+    @setDate(Caldo.Util.nextDate(@date))
     e.preventDefault()
 
   previousDay: (e) ->
-    @setDate(Caldo.Util.previousDate(Caldo.date))
+    @setDate(Caldo.Util.previousDate(@date))
     e.preventDefault()
 
   template: _.template($('#caldo-app-template').html())
 
   render: ->
-    @$el.append(@template(date: Caldo.date))
+    $('.wrap').empty()
+    $('.wrap').append(@el)
+    @$el.append(@template(date: @date))
 
   toggleTodoVisibility: ->
     @$el.find('.todos-wrapper').fadeToggle()
-
 
   showTodos: ->
     @$el.fadeIn('fast')
 
   setDate: (date, options = {}) ->
-    Caldo.date = date
+    @date = date
 
     unless options.silent
       @$el.fadeOut 'fast', =>
-        @$el.find('.date').html(Caldo.Util.humanDate(date))
-      Caldo.Todos.fetch()
+        @$el.find('.date').html(Caldo.Util.humanDate(@date))
+      @collection.setDate(@date)
+      @collection.fetch()
 
 class TodosView extends Backbone.View
   tagName: 'ul'
   className: 'todos'
 
   initialize: ->
+    @app = @options['app']
     @collection.on 'reset',  @render, this
     @collection.on 'change', @render, this
     $(".todos-wrapper").append(@el)
