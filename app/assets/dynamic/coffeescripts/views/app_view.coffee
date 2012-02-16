@@ -40,12 +40,14 @@ class AppView extends Backbone.View
   setDate: (newDate, options = {}) ->
     @date = newDate
 
-    unless options.silent
+    if options.silent
+      @collection.setDate(newDate)
+    else
       @$el.fadeOut 'fast', =>
-        @collection.setDate(newDate)
         @$el.find('.date').html(Caldo.Util.humanDate(@date))
+        @collection.setDate(newDate)
         @showTodos()
-      @collection.fetch()
+      @collection.fetch() if @collection.needsToBeFetched()
 
 @Caldo = window.Caldo || {}
 @Caldo.AppView = AppView

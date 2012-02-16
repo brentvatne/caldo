@@ -1,5 +1,6 @@
 class Todos extends Backbone.Collection
-  initialize: () ->
+  initialize: ->
+    @on 'reset', @updateLastFetchDate, this
 
   model: Caldo.Todo
 
@@ -20,20 +21,29 @@ class Todos extends Backbone.Collection
   setDate: (@date) ->
     @trigger 'change:date'
 
+  updateLastFetchDate: ->
+    @lastFetchDate = @date
+
+  needsToBeFetched: ->
+    @moreThanThreeDaysApart(@date, @lastFetchDate)
+
   # Public: Filters out models based on their date
   #
   # Returns all models that occur on the given date, or are important
   # and within five days
   allOnDate: (date) ->
-    console.log date
     _.filter @models, (todo) =>
       todoDate = todo.get('date')
       todoDate == date or
-        (todo.isImportant() and @upToFiveDaysLater(date, todoDate))
+        (todo.isImportant() and @upToThreeDaysLater(date, todoDate))
 
-  upToFiveDaysLater: (date, otherDate) ->
+  upToThreeDaysLater: (date, otherDate) ->
     daysBetween = Caldo.Util.daysBetween(date, otherDate)
-    daysBetween <= 5 and daysBetween > 0
+    daysBetween < 3 and daysBetween > 0
+
+  moreThanThreeDaysApart: (date, otherDate) ->
+    daysBetween = Caldo.Util.daysBetween(date, otherDate)
+    daysBetween > 3 or daysBetween < -3
 
 @Caldo = window.Caldo || {}
 @Caldo.Todos = new Todos

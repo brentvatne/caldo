@@ -1,5 +1,12 @@
 describe "Todos collection", ->
 
+  describe "sorting", ->
+    it "sorts alphabetically by summary", ->
+      todos = Caldo.Todos.reset [ { summary: "Z" }, { summary: "B" }, { summary: "A" } ]
+
+      expect(_.first(todos.models).get('summary')).toEqual "A"
+      expect(_.last(todos.models).get('summary')).toEqual "Z"
+
   describe "scopes", ->
     beforeEach ->
       @todos = Caldo.Todos.reset [
@@ -20,14 +27,15 @@ describe "Todos collection", ->
       it "returns all important tasks", ->
         expect(@todos.important().length).toEqual 3
 
-    describe "onDate", ->
+
+    describe "allOnDate", ->
       beforeEach ->
         @todos = Caldo.Todos.reset [
-          { summary: "Celebrate new year",    date: "2011-12-31" },
+          { summary: "A Birthday!",           date: "2011-12-31" },
+          { summary: "Buy chicken",           date: "2012-01-01" },
           { summary: "Buy fish",              date: "2012-01-01" },
-          { summary: "Pretend to go fishing", date: "2012-01-01" }
-          { summary: "Buy chicken",           date: "2012-01-02" }
-          { summary: "A Birthday!",           date: "2012-01-06" }
+          { summary: "Car wash day",          date: "2012-01-03" },
+          { summary: "Pretend to go fishing", date: "2012-01-03" }
         ]
 
       it "returns todos on the given date", ->
@@ -36,16 +44,16 @@ describe "Todos collection", ->
         other_todo = _.last(results)
 
         expect(results.length).toEqual 2
-        expect(first_todo.get('summary')).toEqual "Buy fish"
-        expect(other_todo.get('summary')).toEqual "Pretend to go fishing"
+        expect(first_todo.get('summary')).toEqual "Buy chicken"
+        expect(other_todo.get('summary')).toEqual "Buy fish"
 
-      it "also returns todos that are within five days and important", ->
+      it "returns todos that are within three days provided they are important", ->
         _.last(@todos.models).set('important', true)
         results = @todos.allOnDate("2012-01-01")
         last_todo = _.last(results)
 
         expect(results.length).toEqual 3
-        expect(last_todo.get('summary')).toEqual "A Birthday!"
+        expect(last_todo.get('summary')).toEqual "Pretend to go fishing"
 
       it "does not include todos that are important but occur before", ->
         _.first(@todos.models).set('important', true)
@@ -53,4 +61,39 @@ describe "Todos collection", ->
         first_todo = _.first(results)
 
         expect(results.length).toEqual 2
-        expect(first_todo).toNotBe "Celebrate new year"
+        expect(first_todo).toNotBe "A Birthday!"
+
+  describe "updateLastFetchDate", ->
+    it "is called on reset", ->
+      todos = Caldo.Todos
+      expect(todos.lastFetchDate).toBeUndefined()
+
+      todos.setDate('2012-01-01')
+      todos.reset([])
+      expect(todos.lastFetchDate).toEqual '2012-01-01'
+
+  describe "needsToBeFetched", ->
+    it "returns true if last fetch date is more than three days before current day", ->
+      todos = Caldo.Todos
+
+      todos.setDate("2012-01-01")
+      todos = Caldo.Todos.reset([])
+
+      todos.setDate("2012-01-04")
+      expect(todos.needsToBeFetched()).toBeFalsy()
+
+      todos.setDate("2012-01-05")
+      expect(todos.needsToBeFetched()).toBeTruthy()
+
+    it "returns true if the last fetch date is more than three days after the current day", ->
+      todos = Caldo.Todos
+
+      todos.setDate("2011-12-30")
+      todos = Caldo.Todos.reset([])
+
+      todos.setDate("2011-12-27")
+      expect(todos.needsToBeFetched()).toBeFalsy()
+
+      todos.setDate("2011-12-26")
+      expect(todos.needsToBeFetched()).toBeTruthy()
+
