@@ -3,6 +3,9 @@ class Todos extends Backbone.Collection
 
   model: Caldo.Todo
 
+  comparator: (todo) ->
+    todo.get('summary')
+
   complete: ->
     _.filter @models, (todo) -> todo.isComplete()
 
