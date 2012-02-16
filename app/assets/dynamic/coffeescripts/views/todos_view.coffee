@@ -12,7 +12,7 @@ class TodosView extends Backbone.View
   render: ->
     @$el.empty()
 
-    for todo in @collection.models
+    for todo in @collection.allOnDate(@app.date)
       klass = switch todo.isComplete()
         when true  then Caldo.CompleteTodoView
         when false then Caldo.IncompleteTodoView

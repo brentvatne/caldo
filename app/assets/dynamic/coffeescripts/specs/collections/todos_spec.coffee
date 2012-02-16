@@ -31,7 +31,7 @@ describe "Todos collection", ->
         ]
 
       it "returns todos on the given date", ->
-        results = @todos.onDate("2012-01-01")
+        results = @todos.allOnDate("2012-01-01")
         first_todo = _.first(results)
         other_todo = _.last(results)
 
@@ -41,7 +41,7 @@ describe "Todos collection", ->
 
       it "also returns todos that are within five days and important", ->
         _.last(@todos.models).set('important', true)
-        results = @todos.onDate("2012-01-01")
+        results = @todos.allOnDate("2012-01-01")
         last_todo = _.last(results)
 
         expect(results.length).toEqual 3
@@ -49,7 +49,7 @@ describe "Todos collection", ->
 
       it "does not include todos that are important but occur before", ->
         _.first(@todos.models).set('important', true)
-        results = @todos.onDate("2012-01-01")
+        results = @todos.allOnDate("2012-01-01")
         first_todo = _.first(results)
 
         expect(results.length).toEqual 2

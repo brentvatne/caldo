@@ -39,7 +39,7 @@ module Caldo
 
       { :event_id   => todo.event_id,   :summary   => summary,
         :complete   => todo.complete?,  :important => todo.important?,
-        :date       => date }
+        :date       => DateTime.parse(todo.start_date).to_date.to_s }
     end
   end
 end
