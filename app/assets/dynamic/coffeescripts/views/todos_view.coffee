@@ -7,6 +7,7 @@ class TodosView extends Backbone.View
     @app = @options['app']
     @collection.on 'reset',  @render, this
     @collection.on 'change', @render, this
+    @collection.on 'change:date', @render, this
     $(".todos-wrapper").append(@el)
 
   render: ->

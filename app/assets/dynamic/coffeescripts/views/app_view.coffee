@@ -37,13 +37,12 @@ class AppView extends Backbone.View
   showTodos: ->
     @$el.fadeIn('fast')
 
-
   setDate: (newDate, options = {}) ->
     @date = newDate
-    @collection.setDate(newDate)
 
     unless options.silent
       @$el.fadeOut 'fast', =>
+        @collection.setDate(newDate)
         @$el.find('.date').html(Caldo.Util.humanDate(@date))
         @showTodos()
       @collection.fetch()

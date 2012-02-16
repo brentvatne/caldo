@@ -15,6 +15,7 @@ class Todos extends Backbone.Collection
   url: () -> '/todos/' + @date
 
   setDate: (@date) ->
+    @trigger 'change:date'
 
   # Public: Filters out models based on their date
   #
