@@ -44,7 +44,7 @@ class Todos extends Backbone.Collection
 
   threeDaysApart: (date, otherDate) ->
     daysBetween = Caldo.Util.daysBetween(date, otherDate)
-    daysBetween >= 3 or daysBetween <= -3
+    daysBetween > 3 or daysBetween < -3
 
 @Caldo = window.Caldo || {}
 @Caldo.Todos = new Todos
