@@ -16,24 +16,32 @@ class AppView extends Backbone.View
     if preloadData then @collection.reset(preloadData) else @collection.fetch()
 
   events:
-    "click a.next-day":     "nextDay"
-    "click a.previous-day": "previousDay"
+    "click a.next-day":     "navigateToNextDay"
+    "click a.previous-day": "navigateToPreviousDay"
+
+  navigateToNextDay: (e) ->
+    e?.preventDefault()
+    Backbone.history.navigate(Caldo.Util.nextDate(@date))
+    @nextDay()
+
+  navigateToPreviousDay: (e) ->
+    e?.preventDefault()
+    Backbone.history.navigate(Caldo.Util.previousDate(@date))
+    @previousDay()
 
   enableKeyboardScrolling: ->
     $('body').keydown (e) =>
       switch e.keyCode
-        when 37 then @previousDay()
-        when 39 then @nextDay()
+        when 37 then @navigateToPreviousDay()
+        when 39 then @navigateToNextDay()
 
   # Sets the current date of the AppView to the day after the current date
-  nextDay: (e = null) ->
+  nextDay: ->
     @setDate(Caldo.Util.nextDate(@date))
-    e?.preventDefault()
 
   # Sets the current date of the AppView to the day before the current date
-  previousDay: (e = null) ->
+  previousDay: ->
     @setDate(Caldo.Util.previousDate(@date))
-    e?.preventDefault()
 
   template: _.template($('#caldo-app-template').html())
 

@@ -9,7 +9,13 @@ module Caldo
     end
 
     get '/today', :authenticates => true do
-      redirect to("/#{Date.today.to_s}")
+      date = Date.today.to_s
+
+      todos = Todo.all_within_reasonable_range_of(date).map { |todo|
+        TodoPresenter.new(todo).to_hash
+      }.to_json
+
+      erb :todos, :locals => { :todos => todos }
     end
 
     get %r{^\/(\d{4}-\d{2}-\d{2})}, :authenticates => true do

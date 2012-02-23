@@ -11,7 +11,7 @@ Util =
 
   # Returns todays date in the form 2012-01-01
   todaysDate: ->
-    shortDate(moment())
+    @shortDate(moment())
 
   # Formats a given date in the form 2012-01-01, or leaves it if already formatted that way
   #

@@ -1,4 +1,4 @@
 $ ->
-  date = Caldo.Util.extractDateFromURL() || Caldo.Util.todaysDate()
+  new Caldo.Router
+  Backbone.history.start({pushState: true})
 
-  new Caldo.AppView(date: date, collection: Caldo.Todos, preloadData: Caldo.preloadData)
