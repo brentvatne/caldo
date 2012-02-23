@@ -1,6 +1,8 @@
 class AppView extends Backbone.View
   id: 'caldo'
 
+  # Initialize the TodosView (using preload data if it exists, otherwise no), and 
+  # create collection bindings.
   initialize: ->
     @date       = @options['date']
     preloadData = @options['preloadData']
@@ -16,10 +18,12 @@ class AppView extends Backbone.View
     "click a.next-day":     "nextDay"
     "click a.previous-day": "previousDay"
 
+  # Sets the current date of the AppView to the day after the current date
   nextDay: (e) ->
     @setDate(Caldo.Util.nextDate(@date))
     e.preventDefault()
 
+  # Sets the current date of the AppView to the day before the current date
   previousDay: (e) ->
     @setDate(Caldo.Util.previousDate(@date))
     e.preventDefault()
@@ -37,17 +41,20 @@ class AppView extends Backbone.View
   showTodos: ->
     @$el.fadeIn('fast')
 
+  hideTodos: (callback) ->
+    this.$el.fadeOut('fast', callback.bind(this))
+
+  # Changes the date to the given date and cascades the change through
+  # to the Todos collection. Also triggers the transition events to
+  # change the given page.
   setDate: (newDate, options = {}) ->
     @date = newDate
 
-    if options.silent
-      @collection.setDate(newDate)
-    else
-      @$el.fadeOut 'fast', =>
-        @$el.find('.date').html(Caldo.Util.humanDate(@date))
+    unless options.silent
+      @hideTodos ->
+        this.$el.find('.date').html(Caldo.Util.humanDate(@date))
         @collection.setDate(newDate)
         @showTodos()
-      @collection.fetch() if @collection.needsToBeFetched()
 
 @Caldo = window.Caldo || {}
 @Caldo.AppView = AppView

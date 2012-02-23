@@ -20,12 +20,13 @@ class Todos extends Backbone.Collection
 
   setDate: (@date) ->
     @trigger 'change:date'
+    @fetch() if @needsToBeFetched()
 
   updateLastFetchDate: ->
     @lastFetchDate = @date
 
   needsToBeFetched: ->
-    @moreThanThreeDaysApart(@date, @lastFetchDate)
+    @threeDaysApart(@date, @lastFetchDate)
 
   # Public: Filters out models based on their date
   #
@@ -41,9 +42,9 @@ class Todos extends Backbone.Collection
     daysBetween = Caldo.Util.daysBetween(date, otherDate)
     daysBetween < 3 and daysBetween > 0
 
-  moreThanThreeDaysApart: (date, otherDate) ->
+  threeDaysApart: (date, otherDate) ->
     daysBetween = Caldo.Util.daysBetween(date, otherDate)
-    daysBetween > 3 or daysBetween < -3
+    daysBetween >= 3 or daysBetween <= -3
 
 @Caldo = window.Caldo || {}
 @Caldo.Todos = new Todos

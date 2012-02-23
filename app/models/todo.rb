@@ -29,9 +29,9 @@ module Caldo
       }.sort
     end
 
-    def self.all_within_five_days_of(date)
-      events = service.find_events_by_date(:min => DateTime.parse(date) - 3,
-                                           :max => DateTime.parse(date) + 6)
+    def self.all_within_reasonable_range_of(date)
+      events = service.find_events_by_date(:min => DateTime.parse(date) - 4,
+                                           :max => DateTime.parse(date) + 7)
 
       events.inject([]) { |todos, event| todos << new(event) }.sort
     end

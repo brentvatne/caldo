@@ -73,7 +73,7 @@ describe "Todos collection", ->
       expect(todos.lastFetchDate).toEqual '2012-01-01'
 
   describe "needsToBeFetched", ->
-    it "returns true if last fetch date is more than three days before current day", ->
+    it "returns true if last fetch date is three days or more before current day", ->
       todos = Caldo.Todos
 
       todos.setDate("2012-01-01")
