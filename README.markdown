@@ -6,10 +6,7 @@
 1. Install dependencies: `bundle install`. Ensure you have a sqlite
 	 library installed that is compatible with DataMapper.
 2. Configure environment variables with Google your Google API data.
-   Steps for setting up your Google API account can be found [here](http://code.google.com/p/google-api-ruby-client/source/browse/calendar/README.md?repo=samples#29). Once you have your client id and client secret, assuming a Unix environment:
-    - `export CALDO_GOOGLE_API_CLIENT_ID=your_client_id_here`
-    - `export CALDO_GOOGLE_API_CLIENT_SECRET=your_client_secret_here`
-
+   Steps for setting up your Google API account can be found [here](http://code.google.com/p/google-api-ruby-client/source/browse/calendar/README.md?repo=samples#29). Once you have your client id and client secret, copy `config/api_credentials.rb.example` to `config/api_credentials.rb` and fill it in with your information.
 3. `rake server`
 4. Navigate to `http://localhost:4567/`
 
