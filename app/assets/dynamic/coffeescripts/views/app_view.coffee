@@ -57,7 +57,8 @@ class AppView extends Backbone.View
     @$el.fadeIn('fast')
 
   hideTodos: (callback) ->
-    this.$el.fadeOut('fast', callback.bind(this))
+    this.$el.fadeOut 'fast', =>
+      callback.call(this)
 
   # Changes the date to the given date and cascades the change through
   # to the Todos collection. Also triggers the transition events to
