@@ -24,6 +24,16 @@ module Caldo
   class App < Sinatra::Application
     attr_accessor :client, :calendar
 
+    get '/auth/:provider/callback' do
+      content_type 'text/plain'
+      request.env['omniauth.auth'].to_hash.inspect rescue "No data"
+    end
+
+    get '/auth/failure' do
+      content_type 'text/plain'
+      request.env['omniauth.auth'].to_hash.inspect rescue "No data"
+    end
+
     # When Google authentication is confirmed, it is re-directed back to this path.
     # After confirmation, we need to fetch the access token based on a provided code
     # and initialize the session token information, then redirect to the path they
@@ -31,8 +41,6 @@ module Caldo
     get '/oauth2callback' do
       client = new_client_for_session
       client.fetch_access_token
-
-      # new to query here for the user information
 
       token_pair = TokenPair.create(client.authorization_details)
       session[:token_pair_id] = token_pair.id
