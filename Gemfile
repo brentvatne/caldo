@@ -7,6 +7,7 @@ gem 'ratpack', '~> 0.1.3'
 gem 'sinatra-flash', '~> 0.3.0'
 gem 'thin'
 gem 'coffee-script'
+gem 'therubyracer'
 
 # Assets
 gem 'sass', '~> 3.1.14'

@@ -3,6 +3,7 @@ require 'sinatra/ratpack'
 require 'sinatra/flash'
 require 'sass'
 require 'coffee-script'
+require_relative '../config/api_credentials'
 
 module Caldo
   # This portion of the app handles Sinatra configuration and asset
@@ -11,8 +12,8 @@ module Caldo
     enable :sessions
     enable :logging
 
-    set :client_id,     ENV['GOOGLE_ID']
-    set :client_secret, ENV['GOOGLE_SECRET']
+    set :client_id,     Caldo::GAPI_CLIENT_ID
+    set :client_secret, Caldo::GAPI_CLIENT_SECRET
 
     enable :static
     set :root,           File.dirname(__FILE__)
@@ -43,7 +44,6 @@ module Caldo
       end
     end
 
-
     helpers do
       def template(relative_path)
         template_file = File.join(settings.template_dir, relative_path + ".html")
@@ -52,6 +52,7 @@ module Caldo
     end
 
     private
+
     # Checks the disk to see if the given filename exists as a scss spreadsheet
     #
     # Returns true if it does exist, false if not
