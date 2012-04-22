@@ -44,7 +44,11 @@ visually reflect the change.
 	record some data about it upon completion. For example "Run -
 	{minutes}" will ask you for the number of minutes it took you to
 	complete the task. Assuming you input 30 minutes, Caldo will rename the event
-	to "Run - 30 minutes".
+	to "Run - 30 minutes". *this functionality has been temporarily removed*
+
+### Mobile (concentrating on iPhone) specific layout
+
+##- Backbone.js client side rendering of Todos
 
 ## What will it do?
 
@@ -52,18 +56,16 @@ The above functionality is all that was planned for completion during
 the Mendicant University core skills course. The following features may
 be implemented later:
 
-- Mobile (concentrating on iPhone) specific layout
 - Choose the calendar you want to use (currently defaults to your
 - Get more information about the Todo - descrpition, location, link to
 	Google Calendar event. Hidden unless you trigger it somehow.
 	primary calendar)
-- Backbone.js client side rendering of Todos
 - Customize timezone
 - Ability to uncheck events that store data and have it ask for the
   variable value upon marking complete again.
-- Some way to access the data you record, for example through a REST api.
 - Customize event colors so everything isn't necessarily green.
 - Metadata in the description of an event
+- API access to your todos and a command line client that uses it
 
 ## Known bugs
 
