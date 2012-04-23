@@ -177,7 +177,7 @@ DEPENDENCIES
   coffee-script
   datamapper (~> 1.2.0)
   dm-sqlite-adapter (~> 1.2.0)
-  google-api-client (~> 0.3.0)
+  google-api-client
   mocha (~> 0.10.3)
   omniauth
   omniauth-google-oauth2

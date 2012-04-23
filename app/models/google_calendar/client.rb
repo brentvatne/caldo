@@ -26,32 +26,22 @@ module Caldo
         delegate.authorization.state
       end
 
-      # Auto approval does not bother the user to approve the use. The first time
-      # you use auto approval, it will give you a refresh token - if you lose the
-      # refresh token, you need to ask for it again using force.
-      def authorization_uri(force=false)
-        return forced_authorization_uri if force
-        auto_approval_uri
-      end
-
-      def forced_authorization_uri
-        authorization_details.authorization_uri.to_s
-      end
-
-      def auto_approval_uri
-        enable_auto_approval(authorization_details.authorization_uri.to_s)
-      end
-
       def has_valid_access_token?
-        access_token? && !delegate.authorization.expired?
+        access_token?
       end
 
       def access_token?
         delegate.authorization.access_token
       end
 
+      # should be called refresh_access_token
       def fetch_access_token
         delegate.authorization.fetch_access_token!
+        # here i do not update the local tokenpair persisted
+        # to the db!
+        #
+        # put code here to update it properly!
+        # need to set the new attributes from client
       end
 
       def token_pair=(new_token_pair)

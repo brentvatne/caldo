@@ -18,7 +18,7 @@ gem 'sass', '~> 3.1.14'
 gem 'rake', '~> 0.9.2.2'
 
 # Others
-gem 'google-api-client', '~> 0.3.0'
+gem 'google-api-client'
 gem 'datamapper', '~> 1.2.0'
 gem 'dm-sqlite-adapter', '~> 1.2.0'
 

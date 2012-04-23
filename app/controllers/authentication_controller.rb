@@ -27,25 +27,18 @@ module Caldo
     get '/auth/:provider/callback' do
       content_type 'text/plain'
       request.env['omniauth.auth'].to_hash.inspect rescue "No data"
+
+      # create user here
+      # why is this create? how do we check if it already exists?
+      token_pair = TokenPair.create(omniauth_params['credentials'])
+      session[:token_pair_id] = token_pair.id
+
+      redirect to('/today')
     end
 
     get '/auth/failure' do
       content_type 'text/plain'
       request.env['omniauth.auth'].to_hash.inspect rescue "No data"
-    end
-
-    # When Google authentication is confirmed, it is re-directed back to this path.
-    # After confirmation, we need to fetch the access token based on a provided code
-    # and initialize the session token information, then redirect to the path they
-    # wanted to visit previously.
-    get '/oauth2callback' do
-      client = new_client_for_session
-      client.fetch_access_token
-
-      token_pair = TokenPair.create(client.authorization_details)
-      session[:token_pair_id] = token_pair.id
-
-      redirect to(client.path_before_signing_in)
     end
 
     # Logs the user out by reseting the session token information. Does not
@@ -65,18 +58,14 @@ module Caldo
     def initialize_api_client
       client = GoogleAPIGateway[session[:uid]]
 
+      # gateway client already created and has a valid access token
       if client && client.has_valid_access_token?
         Thread.current['uid'] = session[:uid]
       else
-        session[:uid] = generate_uid unless session[:uid]
-        client = new_client_for_session
-        redirect client.authorization_uri, 303 unless authorization_in_progress?
+        session[:uid] = omniauth_params['info']['email'] unless session[:uid]
+        client        = new_client_for_session
+        redirect '/auth/google_oauth2', 303 unless authorization_in_progress?
       end
-    end
-
-    # Generates a unique string to key the GoogleAPIGateway multiton
-    def generate_uid
-      rand(38**8).to_s(36)
     end
 
     def new_client_for_session
@@ -88,9 +77,8 @@ module Caldo
         c.client_id     = settings.client_id
         c.client_secret = settings.client_secret
         c.token_pair    = session_token_pair
-        c.state         = params[:state] || request.path_info
-        c.redirect_uri  = to('/oauth2callback')
-        c.code          = params[:code]
+        #c.state         = params[:state] || request.path_info
+        c.redirect_uri  = to('/auth/google_oauth2/callback')
       end
     end
 
@@ -109,7 +97,11 @@ module Caldo
     #
     # Returns true if authorization is in progress, or false otherwise
     def authorization_in_progress?
-      request.path_info =~ /^\/oauth2/
+      request.path_info =~ /^\/oauth/
+    end
+
+    def omniauth_params
+     request.env['omniauth.auth'].to_hash
     end
   end
 end

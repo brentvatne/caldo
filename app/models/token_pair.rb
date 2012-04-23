@@ -12,17 +12,15 @@ module Caldo
 
     property :id, Serial
     property :refresh_token, String, :length => 255
-    property :access_token, String, :length => 255
-    property :expires_in, Integer
-    property :issued_at, Integer
+    property :access_token, String,  :length => 255
+    property :expires_at, Integer
 
     def initialize(attrs)
       if (attrs.kind_of?(Hash))
         new_object = OpenStruct.new
         new_object.refresh_token = attrs[:refresh_token] || attrs['refresh_token']
-        new_object.access_token  = attrs[:access_token]  || attrs['access_token']
-        new_object.expires_in    = attrs[:expires_in]    || attrs['expires_in']
-        new_object.issued_at     = attrs[:issued_at]     || attrs['issued_at']
+        new_object.access_token  = attrs[:access_token]  || attrs['token']
+        new_object.expires_at    = attrs[:expires_at]    || attrs['expires_at']
         attrs = new_object
       end
       update_token!(attrs)
@@ -30,17 +28,15 @@ module Caldo
 
     # Only set the refresh token once.
     def update_token!(object)
-      self.refresh_token = self.refresh_token || object.refresh_token
+      self.refresh_token = object.refresh_token unless object.refresh_token.nil?
       self.access_token  = object.access_token
-      self.expires_in    = object.expires_in
-      self.issued_at     = object.issued_at
+      self.expires_at    = object.expires_at
     end
 
     def to_hash
       { :refresh_token => refresh_token,
         :access_token  => access_token,
-        :expires_in    => expires_in,
-        :issued_at     => Time.at(issued_at) }
+        :expires_at    => Time.at(expires_at) }
     end
   end
 end
