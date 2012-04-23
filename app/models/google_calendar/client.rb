@@ -37,6 +37,8 @@ module Caldo
       # should be called refresh_access_token
       def fetch_access_token
         delegate.authorization.fetch_access_token!
+        # find the user
+        # update their token to the given token
         # here i do not update the local tokenpair persisted
         # to the db!
         #

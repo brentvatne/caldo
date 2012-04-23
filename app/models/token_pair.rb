@@ -10,14 +10,16 @@ module Caldo
   class TokenPair
     include DataMapper::Resource
 
-    property :id, Serial
-    property :refresh_token, String, :length => 255
-    property :access_token, String,  :length => 255
-    property :expires_at, Integer
+    belongs_to :user, :required => false
+
+    property :id,            Serial
+    property :refresh_token, String
+    property :access_token,  String
+    property :expires_at,    Integer
 
     def initialize(attrs)
-      if (attrs.kind_of?(Hash))
-        new_object = OpenStruct.new
+      if attrs.kind_of?(Hash)
+        new_object               = OpenStruct.new
         new_object.refresh_token = attrs[:refresh_token] || attrs['refresh_token']
         new_object.access_token  = attrs[:access_token]  || attrs['token']
         new_object.expires_at    = attrs[:expires_at]    || attrs['expires_at']
@@ -40,6 +42,3 @@ module Caldo
     end
   end
 end
-
-DataMapper.finalize
-DataMapper.auto_upgrade!
