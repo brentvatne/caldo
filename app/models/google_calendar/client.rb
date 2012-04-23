@@ -8,7 +8,6 @@ module Caldo
 
       def initialize
         self.delegate = Google::APIClient.new
-        self.scope    = default_options[:scope]
         yield self if block_given?
         self.calendar = Calendar.new(self)
       end
@@ -27,6 +26,7 @@ module Caldo
       end
 
       def has_valid_access_token?
+        # use Time.at(expires_at) compared to current time
         access_token?
       end
 
@@ -84,20 +84,31 @@ module Caldo
         delegate.authorization.state = new_state
       end
 
+      # Set the expiration time of the token (to the second)
+      #
+      # new_expire_time - An integer representing a time
+      #
+      # Returns a Time object instantiated from the given time integer
+      def token_expiration=(new_expire_time)
+        @expires_at = Time.at(new_expire_time)
+      end
+
+      # Determines if the access token has expired
+      #
+      # If it's 5 minutes before the expiration date, it is considered expired.
+      #
+      # Returns true if expired, false if not
+      def access_token_expired?
+        !!(Time.now >= (expires_at - 5 * 60))
+      end
+
       private
       attr_accessor :delegate
+      attr_reader   :expires_at
       attr_writer   :calendar
 
       def refresh_token?
         delegate.authorization.refresh_token
-      end
-
-      def enable_auto_approval(path)
-        path.gsub("&approval_prompt=auto","")
-      end
-
-      def default_options
-        { :scope => 'https://www.googleapis.com/auth/calendar' }
       end
     end
   end
