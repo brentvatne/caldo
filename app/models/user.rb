@@ -14,5 +14,9 @@ module Caldo
         :token_pair => TokenPair.create(params['credentials'])
       })
     end
+
+    def self.token_pair_for(email)
+      first(:email => email).token_pair
+    end
   end
 end

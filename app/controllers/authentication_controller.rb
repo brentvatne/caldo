@@ -4,22 +4,6 @@ require_relative '../models/google_calendar/calendar'
 require_relative '../models/google_calendar/throttler'
 
 module Caldo
-  GoogleAPIGateway = Object.new
-
-  class << GoogleAPIGateway
-    def clients
-      @clients ||= {}
-    end
-
-    def [](uid)
-      clients[uid]
-    end
-
-    def []=(uid, client)
-      clients[uid] = GoogleCalendar::Throttler.new(client, 3)
-    end
-  end
-
   class App < Sinatra::Application
     attr_accessor :client, :calendar
 
@@ -41,8 +25,7 @@ module Caldo
     # Logs the user out by reseting the session token information. Does not
     # delete their token key from the database.
     get '/sign_out' do
-      GoogleAPIGateway[session[:uid]] = nil
-      session[:uid]                   = nil
+      session[:uid]  = nil
       flash[:notice] = "You have been signed out! See you again soon."
       redirect to('/')
     end
@@ -60,8 +43,7 @@ module Caldo
     # authorized
     def authenticate
       if user_logged_in?
-        client = find_or_create_client_for_session
-        puts client.inspect
+        Thread.current['uid'] = session[:uid]
       else
         unless authentication_in_progress?
           redirect '/auth/google_oauth2', 303
@@ -69,21 +51,8 @@ module Caldo
       end
     end
 
-    def find_or_create_client_for_session
-      Thread.current['uid'] = session[:uid]
-      GoogleAPIGateway[session[:uid]] = new_client
-    end
-
     def user_logged_in?
       !!session[:uid]
-    end
-
-    def new_client
-      GoogleCalendar::Client.new do |c|
-        c.client_id     = settings.client_id
-        c.client_secret = settings.client_secret
-        c.token_pair    = session_token_pair
-      end
     end
 
     # Returns TokenPair instance from the session or returns nil

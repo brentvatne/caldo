@@ -104,7 +104,11 @@ module Caldo
 
     # Returns the thread local Google Calendar API Client wrapper instance
     def self.service
-      Caldo::GoogleAPIGateway[Thread.current['uid']].calendar
+      @service ||= GoogleCalendar::Client.new do |c|
+        c.client_id     = GAPI_CLIENT_ID
+        c.client_secret = GAPI_CLIENT_SECRET
+        c.token_pair    = User.token_pair_for(Thread.current['uid'])
+      end.calendar
     end
   end
 end
