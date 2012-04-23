@@ -38,17 +38,9 @@ visually reflect the change.
 - Removing the check will change the color to grey, indicating that it
 	is not done.
 
-### Record metadata to events upon completion
-
-- Put a single tag in the title of your event to indicate that you want to
-	record some data about it upon completion. For example "Run -
-	{minutes}" will ask you for the number of minutes it took you to
-	complete the task. Assuming you input 30 minutes, Caldo will rename the event
-	to "Run - 30 minutes". *this functionality has been temporarily removed*
-
 ### Mobile (concentrating on iPhone) specific layout
 
-##- Backbone.js client side rendering of Todos
+### Backbone.js client side rendering of Todos
 
 ## What will it do?
 
@@ -56,16 +48,17 @@ The above functionality is all that was planned for completion during
 the Mendicant University core skills course. The following features may
 be implemented later:
 
-- Choose the calendar you want to use (currently defaults to your
-- Get more information about the Todo - descrpition, location, link to
-	Google Calendar event. Hidden unless you trigger it somehow.
-	primary calendar)
-- Customize timezone
-- Ability to uncheck events that store data and have it ask for the
-  variable value upon marking complete again.
-- Customize event colors so everything isn't necessarily green.
-- Metadata in the description of an event
+- Choose the calendar you want to use (it uses only the primary calendar currently).
+- Get more information about the Todo - description, location, link to Google Calendar event. Hidden until toggled (hover?).
 - API access to your todos and a command line client that uses it
+- Record metadata about events - put a single tag in the title of your event to indicate that you want to
+	record some data about it upon completion. For example "Run -
+	{minutes}" will ask you for the number of minutes it took you to
+	complete the task. Assuming you input 30 minutes, Caldo will rename the event
+	to "Run - 30 minutes". *this functionality has been temporarily removed*
+- Also have metadata in the description - maybe number of pomodoros for
+  example.
+- Ability to uncheck events that store data and have it ask for the variable value upon marking complete again.
 
 ## Known bugs
 
