@@ -17,7 +17,7 @@ use OmniAuth::Builder do
            Caldo::GAPI_CLIENT_SECRET,
            { :scope  => scope,
              :access => 'offline',
-             :approval_prompt => 'force' }
+             :approval_prompt => '' }
 end
 
 run Caldo::App.new
