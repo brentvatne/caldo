@@ -9,7 +9,6 @@ module Caldo
   # This portion of the app handles Sinatra configuration and asset
   # serving functionality.
   class App < Sinatra::Application
-    enable :sessions
     enable :logging
 
     set :client_id,     Caldo::GAPI_CLIENT_ID
