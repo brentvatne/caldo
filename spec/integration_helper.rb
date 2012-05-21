@@ -3,7 +3,7 @@ require 'capybara'
 require 'capybara/dsl'
 require 'timecop'
 
-Capybara.app = Caldo::App
+# Capybara.app = Caldo::App
 
 RSpec.configure do |config|
   # config.include Capybara::DSL

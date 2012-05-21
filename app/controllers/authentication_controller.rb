@@ -1,104 +1,76 @@
 require_relative '../app'
 require_relative '../models/google_calendar/client'
 require_relative '../models/google_calendar/calendar'
-require_relative '../models/google_calendar/throttler'
-require_relative '../models/token_pair'
 
 module Caldo
-  GoogleAPIGateway = Object.new
-
-  class << GoogleAPIGateway
-    def clients
-      @clients ||= {}
-    end
-
-    def [](uid)
-      clients[uid]
-    end
-
-    def []=(uid, client)
-      clients[uid] = GoogleCalendar::Throttler.new(client, 3)
-    end
-  end
-
   class App < Sinatra::Application
     attr_accessor :client, :calendar
 
-    # When Google authentication is confirmed, it is re-directed back to this path.
-    # After confirmation, we need to fetch the access token based on a provided code
-    # and initialize the session token information, then redirect to the path they
-    # wanted to visit previously.
-    get '/oauth2callback' do
-      client = new_client_for_session
-      client.fetch_access_token
+    get '/auth/:provider/callback' do
+      user          = User.find_or_create_from_omniauth(omniauth_params)
+      session[:uid] = user.email
 
-      token_pair = TokenPair.create(client.authorization_details)
-      session[:token_pair_id] = token_pair.id
+      redirect to('/today')
+    end
 
-      redirect to(client.path_before_signing_in)
+    get '/auth/failure' do
+      content_type 'text/plain'
+      "Sorry, something has gone wrong with the authentication process!"
     end
 
     # Logs the user out by reseting the session token information. Does not
     # delete their token key from the database.
     get '/sign_out' do
-      session[:token_pair_id] = nil
-      GoogleAPIGateway[session[:uid]] = nil
-      session[:uid] = nil
+      session[:uid]  = ""
       flash[:notice] = "You have been signed out! See you again soon."
       redirect to('/')
-    end
-
-    private
-    # Instantiates the API client and makes it available to the local thread,
-    # or initiates the authroization process if the user is not already
-    # authorized
-    def initialize_api_client
-      if client = GoogleAPIGateway[session[:uid]]
-        client.fetch_access_token unless client.has_valid_access_token?
-        Thread.current['uid'] = session[:uid]
-      else
-        session[:uid] = generate_uid unless session[:uid]
-        client = new_client_for_session
-        redirect client.authorization_uri, 303 unless authorization_in_progress?
-      end
-    end
-
-    # Generates a unique string to key the GoogleAPIGateway multiton
-    def generate_uid
-      rand(38**8).to_s(36)
-    end
-
-    def new_client_for_session
-      GoogleAPIGateway[session[:uid]] = new_client
-    end
-
-    def new_client
-      GoogleCalendar::Client.new do |c|
-        c.client_id     = settings.client_id
-        c.client_secret = settings.client_secret
-        c.token_pair    = session_token_pair
-        c.state         = params[:state] || request.path_info
-        c.redirect_uri  = to('/oauth2callback')
-        c.code          = params[:code]
-      end
     end
 
     # A condition that can be added to Sinatra app class methods, as follows:
     # get '/', :authenticates => true { .. }
     set(:authenticates) do |required|
-      condition { initialize_api_client if required }
+      condition { authenticate if required }
     end
 
-    # Creates a TokenPair instance from the session token pair id or returns nil
-    def session_token_pair
-      TokenPair.get(session[:token_pair_id]) unless session[:token_pair_id].nil?
+    private
+
+    # Instantiates the API client and makes it available to the local thread,
+    # or initiates the authroization process if the user is not already
+    # authorized
+    def authenticate
+      if user_has_session_cookie? and user_in_database?
+        Thread.current['uid'] = session[:uid]
+      else
+        unless authentication_in_progress?
+          redirect '/auth/google_oauth2', 303
+        end
+      end
     end
 
-    # Examines the path to determine if authorization is taking place
+    def user_has_session_cookie?
+      !!session[:uid]
+    end
+
+    def user_in_database?
+      current_user
+    end
+
+    helpers do
+      def current_user
+        @current_user ||= User.first(:email => session[:uid])
+      end
+    end
+
+    # Private: Examines the path to determine if authorization is taking place
     #
     # Returns true if authorization is in progress, or false otherwise
-    def authorization_in_progress?
-      request.path_info =~ /^\/oauth2/
+    def authentication_in_progress?
+      request.path_info =~ /^\/oauth/
+    end
+
+    # Private: Returns the Omniauth parameters hash
+    def omniauth_params
+     request.env['omniauth.auth'].to_hash
     end
   end
 end

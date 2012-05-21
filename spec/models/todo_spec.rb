@@ -1,7 +1,18 @@
 require 'spec_helper'
+require_relative '../../app/models/todo'
 
 describe Caldo::Todo do
-  let(:todo) { Caldo::Todo.new(:summary => "Hello", :start => "today", :end => "tomorrow") }
+  let(:todo_params) { { :id => 1234, :summary => "Hello", :start_date => "today", :end_date => "tomorrow", :color_id => 1 } }
+  let(:todo) { Caldo::Todo.new(todo_params) }
+
+  describe "Todo.update" do
+    it "calls the service with the right parameters" do
+      fake_service = stub(:update_event)
+      Caldo::Todo.stubs(:service).returns(fake_service)
+      fake_service.expects(:update_event).with(:color => :green, :id => 1234).returns(todo_params)
+      Caldo::Todo.update(:complete => true, :event_id => 1234)
+    end
+  end
 
   describe "summary variable" do
     it "should detect the summary variable" do

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_relative '../../app/presenters/date_presenter'
 
 describe Caldo::DatePresenter do
   let(:date) { DateTime.parse("2012-01-27 8:00PM") }

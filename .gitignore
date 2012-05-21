@@ -12,4 +12,5 @@ db/app.db
 .sass-cache/
 .rvmrc
 spec/config/api_access.yaml
+config/api_credentials.rb
 .webbynode

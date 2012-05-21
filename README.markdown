@@ -6,10 +6,7 @@
 1. Install dependencies: `bundle install`. Ensure you have a sqlite
 	 library installed that is compatible with DataMapper.
 2. Configure environment variables with Google your Google API data.
-   Steps for setting up your Google API account can be found [here](http://code.google.com/p/google-api-ruby-client/source/browse/calendar/README.md?repo=samples#29). Once you have your client id and client secret, assuming a Unix environment:
-    - `export CALDO_GOOGLE_API_CLIENT_ID=your_client_id_here`
-    - `export CALDO_GOOGLE_API_CLIENT_SECRET=your_client_secret_here`
-
+   Steps for setting up your Google API account can be found [here](http://code.google.com/p/google-api-ruby-client/source/browse/calendar/README.md?repo=samples#29). Once you have your client id and client secret, copy `config/api_credentials.rb.example` to `config/api_credentials.rb` and fill it in with your information.
 3. `rake server`
 4. Navigate to `http://localhost:4567/`
 
@@ -37,13 +34,9 @@ visually reflect the change.
 - Removing the check will change the color to grey, indicating that it
 	is not done.
 
-### Record metadata to events upon completion
+### Mobile (concentrating on iPhone) specific layout
 
-- Put a single tag in the title of your event to indicate that you want to
-	record some data about it upon completion. For example "Run -
-	{minutes}" will ask you for the number of minutes it took you to
-	complete the task. Assuming you input 30 minutes, Caldo will rename the event
-	to "Run - 30 minutes".
+### Backbone.js client side rendering of Todos
 
 ## What will it do?
 
@@ -51,20 +44,17 @@ The above functionality is all that was planned for completion during
 the Mendicant University core skills course. The following features may
 be implemented later:
 
-- Help section that describes the different tags
-- Mobile (concentrating on iPhone) specific layout
-- Choose the calendar you want to use (currently defaults to your
-  primary)
-- Get more information about the Todo - descrpition, location, link to
-	Google Calendar event. Hidden unless you trigger it somehow.
-	primary calendar)
-- Backbone.js client side rendering of Todos
-- Customize timezone
-- Ability to uncheck events that store data and have it ask for the
-  variable value upon marking complete again.
-- Some way to access the data you record, for example through a REST api.
-- Customize event colors so everything isn't necessarily green.
-- Metadata in the description of an event
+- Choose the calendar you want to use (it uses only the primary calendar currently).
+- Get more information about the Todo - description, location, link to Google Calendar event. Hidden until toggled (hover?).
+- API access to your todos and a command line client that uses it
+- Record metadata about events - put a single tag in the title of your event to indicate that you want to
+	record some data about it upon completion. For example "Run -
+	{minutes}" will ask you for the number of minutes it took you to
+	complete the task. Assuming you input 30 minutes, Caldo will rename the event
+	to "Run - 30 minutes". *this functionality has been temporarily removed*
+- Also have metadata in the description - maybe number of pomodoros for
+  example.
+- Ability to uncheck events that store data and have it ask for the variable value upon marking complete again.
 
 ## Known bugs
 

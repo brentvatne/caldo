@@ -6,6 +6,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>Caldo</title>
   <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='/stylesheets/todos.css' rel='stylesheet' type='text/css'>
@@ -23,15 +24,23 @@
     <% end %>
   <% end %>
 
-  <div class="content-container">
+  <div class="wrap">
     <%= yield  %>
   </div>
 
-  <script src='/javascripts/jquery.js'></script>
-  <script src='/javascripts/jquery.simplemodal.js'></script>
-  <script src='/javascripts/jquery.templates.js'></script>
-  <script src='/javascripts/templates.js'></script>
-  <script src='/javascripts/app.js'></script>
+  <script src='/javascripts/vendor/jquery.js'></script>
+  <script src='/javascripts/vendor/underscore.js'></script>
+  <script src='/javascripts/vendor/backbone.js'></script>
+  <script src='/javascripts/vendor/moment.js'></script>
+  <script src='/javascripts/util.js'></script>
+  <script src='/javascripts/models/todo.js'></script>
+  <script src='/javascripts/collections/todos.js'></script>
+  <script src='/javascripts/views/app_view.js'></script>
+  <script src='/javascripts/views/todos_view.js'></script>
+  <script src='/javascripts/views/incomplete_todo_view.js'></script>
+  <script src='/javascripts/views/complete_todo_view.js'></script>
+  <script src='/javascripts/router.js'></script>
+  <script src='/javascripts/application.js'></script>
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -43,7 +52,6 @@
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
-
   </script>
 </body>
 </html>

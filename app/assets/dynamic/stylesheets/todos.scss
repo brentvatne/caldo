@@ -20,7 +20,7 @@ body {
   }
 }
 
-.content-container {
+.wrap {
   width: 400px;
   margin: 0 auto;
   .minor-group {
@@ -42,7 +42,7 @@ body {
   }
 }
 
-.task-list {
+#caldo {
   text-align: center;
   .todos {
     width: 350px;
@@ -73,7 +73,7 @@ body {
         }
       }
 
-      &.done {
+      &.complete {
         opacity: 0.2;
       }
     }
@@ -90,5 +90,16 @@ body {
       position: absolute;
       right: 0px;
     }
+  }
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 569px) {
+  h1 {
+    font-size: 24px;
+    padding-bottom: 10px;
+  }
+  .wrap {
+    width: 300px !important;
+    padding: 0px 10px 0px 10px;
   }
 }

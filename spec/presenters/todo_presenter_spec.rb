@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_relative '../../app/presenters/todo_presenter'
 
 describe Caldo::TodoPresenter do
   let(:todo) { Caldo::Todo.new(:summary => "Run {minutes} *important*",

@@ -1,5 +1,4 @@
 require 'json'
-require_relative 'authentication_controller'
 require_relative '../presenters/date_presenter'
 require_relative '../presenters/todo_presenter'
 
@@ -10,33 +9,39 @@ module Caldo
     end
 
     get '/today', :authenticates => true do
-      redirect to("/#{Date.today.to_s}")
+      date = Date.today.to_s
+
+      todos = Todo.all_within_reasonable_range_of(date).map { |todo|
+        TodoPresenter.new(todo).to_hash
+      }.to_json
+
+      erb :todos, :locals => { :todos => todos }
     end
 
-    get %r{(\d{4}-\d{2}-\d{2})}, :authenticates => true do
+    get %r{^\/(\d{4}-\d{2}-\d{2})}, :authenticates => true do
       date = params[:captures].first
 
-      erb :todos, :locals => { :todos => Todo.all_on_date(date),
-                               :date  => DatePresenter.new(date) }
+      todos = Todo.all_within_reasonable_range_of(date).map { |todo|
+        TodoPresenter.new(todo).to_hash
+      }.to_json
+
+      erb :todos, :locals => { :todos => todos }
     end
 
-    post '/todos/complete', :authenticates => true do
+    get '/todos/:date', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 
-      todo = Todo.mark_complete(:event_id => params[:event_id],
-                                :date     => params[:date],
-                                :summary  => params[:summary],
-                                :variable => params[:variable])
-
-      TodoPresenter.new(todo).to_json
+      Todo.all_within_reasonable_range_of(params[:date]).map { |todo|
+        TodoPresenter.new(todo).to_hash
+      }.to_json
     end
 
-    post '/todos/incomplete', :authenticates => true do
+    put '/todos/:date/:id', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 
-      (Todo.mark_incomplete(:event_id => params[:event_id],
-                            :date     => params[:date])
-      ).to_json
+      record = JSON.parse(request.body.read).symbolize_keys!
+      todo = Todo.update(record)
+      TodoPresenter.new(todo).to_hash.to_json
     end
   end
 end

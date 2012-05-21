@@ -1,4 +1,5 @@
 require 'date'
+require_relative '../models/todo'
 
 module Caldo
   # This class is responsible for any todo presentation logic used within views.
@@ -33,13 +34,12 @@ module Caldo
       end
     end
 
-    # Serializes the Todo instance to a JSON string
-    def to_json
+    def to_hash
       return false.to_json if todo.nil?
 
       { :event_id   => todo.event_id,   :summary   => summary,
         :complete   => todo.complete?,  :important => todo.important?,
-        :date       => date }.to_json
+        :date       => DateTime.parse(todo.start_date).to_date.to_s }
     end
   end
 end

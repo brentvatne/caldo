@@ -10,39 +10,47 @@ module Caldo
   class TokenPair
     include DataMapper::Resource
 
-    property :id, Serial
-    property :refresh_token, String, :length => 255
-    property :access_token, String, :length => 255
-    property :expires_in, Integer
-    property :issued_at, Integer
+    belongs_to :user, :required => false
 
-    def initialize(attrs)
-      if (attrs.kind_of?(Hash))
-        new_object = OpenStruct.new
-        new_object.refresh_token = attrs[:refresh_token] || attrs['refresh_token']
-        new_object.access_token  = attrs[:access_token]  || attrs['access_token']
-        new_object.expires_in    = attrs[:expires_in]    || attrs['expires_in']
-        new_object.issued_at     = attrs[:issued_at]     || attrs['issued_at']
-        attrs = new_object
-      end
-      update_token!(attrs)
+    property :id,            Serial
+    property :refresh_token, String
+    property :access_token,  String
+    property :expires_at,    Integer
+
+    def initialize(params)
+      update_token(params)
     end
 
-    def update_token!(object)
-      self.refresh_token = object.refresh_token || self.refresh_token
-      self.access_token  = object.access_token
-      self.expires_in    = object.expires_in
-      self.issued_at     = object.issued_at
+    def update_token(params)
+      attrs = attributes_for(params)
+      self.refresh_token = attrs.refresh_token unless attrs.refresh_token.nil?
+      self.access_token  = attrs.access_token
+      self.expires_at    = attrs.expires_at
     end
 
     def to_hash
       { :refresh_token => refresh_token,
         :access_token  => access_token,
-        :expires_in    => expires_in,
-        :issued_at     => Time.at(issued_at) }
+        :expires_at    => Time.at(expires_at) }
+    end
+
+    private
+
+    # Converts a hash or hash-like object that indexes elements on strings or
+    # symbols to an object that provides access to attributes through dot
+    # notation.
+    #
+    # Returns an OpenStruct instance
+    def attributes_for(params)
+      if params.kind_of?(Hash)
+        attrs = OpenStruct.new
+        attrs.refresh_token = params[:refresh_token] || params['refresh_token']
+        attrs.access_token  = params[:access_token]  || params['token']
+        attrs.expires_at    = params[:expires_at]    || params['expires_at']
+
+        params = attrs
+      end
+      params
     end
   end
 end
-
-DataMapper.finalize
-DataMapper.auto_upgrade!

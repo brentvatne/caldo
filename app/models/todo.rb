@@ -29,40 +29,30 @@ module Caldo
       }.sort
     end
 
-    # Todos are sorted by start date
-    def <=>(other)
-      self.start_date <=> other.start_date
+    def self.all_within_reasonable_range_of(date)
+      events = service.find_events_by_date(:min => DateTime.parse(date) - 4,
+                                           :max => DateTime.parse(date) + 7)
+
+      events.inject([]) { |todos, event| todos << new(event) }.sort
     end
 
-    # Sends the service call to mark the corresponding event as complete on
-    # Google Calendar
-    #
-    # params - The hash options containing information about the todo to update
-    #          :id       - The unique id of the event according to Google Calendar
-    #          :date     - A string date of the form "2012-01-02" which represents
-    #                      the start date of the todo.
-    #          :summary  - The string summary of the todo, kind of the 'title'
-    #          :variable - A string that will be used to a replace a variable
-    #                      portion of the summary, if it has one.
-    #
-    # Returns a truthy value if it was a success, or a falsey if not
-    def self.mark_complete(params)
-      summary     = substitute_variable(params[:summary], params[:variable])
-      params[:id] = params[:event_id]
-      event       = service.update_event(params.merge(:color => :green, :summary => summary))
+    def self.find(id)
+      new(service.find_event(id))
+    end
+
+    def self.update(params)
+      params[:color] = if params[:complete] == true then :green else :grey end
+      params[:id]    = params[:event_id]
+      params.delete(:event_id)
+      params.delete(:complete)
+      params.delete(:summary)
+      event = service.update_event(params)
       Todo.new(event)
     end
 
-    # Sends the service call to mark the corresponding event as incomplete on
-    # Google Calendar
-    #
-    # params - The hash options containing information about the todo to update
-    #          :id       - The unique id of the event according to Google Calendar
-    #
-    # Returns a truthy value if it was a success, or a falsey if not
-    def self.mark_incomplete(params)
-      params[:id] = params[:event_id]
-      !!service.update_event(params.merge(:color => :grey))
+    # Todos are sorted by start date
+    def <=>(other)
+      self.start_date <=> other.start_date
     end
 
     # Replaces the variable portion of a summary with a given value
@@ -111,9 +101,14 @@ module Caldo
     end
 
     private
+
     # Returns the thread local Google Calendar API Client wrapper instance
     def self.service
-      Caldo::GoogleAPIGateway[Thread.current['uid']].calendar
+      @service ||= GoogleCalendar::Client.new do |c|
+        c.client_id     = GAPI_CLIENT_ID
+        c.client_secret = GAPI_CLIENT_SECRET
+        c.token_pair    = User.token_pair_for(Thread.current['uid'])
+      end.calendar
     end
   end
 end

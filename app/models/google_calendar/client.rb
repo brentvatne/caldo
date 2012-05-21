@@ -1,15 +1,17 @@
 require 'google/api_client'
-require_relative 'calendar'
 
 module Caldo
   module GoogleCalendar
+    class NoRefreshToken < StandardError; end
+
     class Client
       attr_reader :calendar
 
       def initialize
         self.delegate = Google::APIClient.new
-        self.scope    = default_options[:scope]
+
         yield self if block_given?
+
         self.calendar = Calendar.new(self)
       end
 
@@ -17,56 +19,72 @@ module Caldo
         delegate.send(method, *args, &block)
       end
 
-      def authorization_details
-        delegate.authorization
+      def execute(*args)
+        if access_token_expired?
+          get_fresh_access_token
+        end
+
+        delegate.send(:execute, *args)
       end
 
-      # This is the url that was requested before redirecting to authorization
-      def path_before_signing_in
-        delegate.authorization.state
+      # Set the local Client token pair values and update them if
+      # necessary (and possible)
+      def token_pair=(tokens)
+        if tokens
+          delegate.authorization.update_token!(tokens.to_hash)
+        end
       end
 
-      def authorization_uri
-        if access_token? && !refresh_token?
-          forced_authorization_uri
+      # Fetches a new access token and saves it
+      #
+      # Raises NoRefreshToken if a refresh token is somehow not available
+      def get_fresh_access_token
+        if refresh_token
+          delegate.authorization.fetch_access_token!
+          save_new_token
         else
-          auto_approval_uri
+          raise NoRefreshToken
         end
       end
 
-      def forced_authorization_uri
-        authorization_details.authorization_uri.to_s
+      # Saves the current token information to the user
+      def save_new_token(user = nil)
+        user ||= User.first(Thread.current['uid'])
+        user.update_token(delegate.authorization)
       end
 
-      def auto_approval_uri
-        enable_auto_approval(authorization_details.authorization_uri.to_s)
-      end
-
-      def has_valid_access_token?
-        access_token? && !delegate.authorization.expired?
-      end
-
-      def access_token?
-        delegate.authorization.access_token
-      end
-
-      def fetch_access_token
-        delegate.authorization.fetch_access_token!
-      end
-
-      def token_pair=(new_token_pair)
-        if new_token_pair
-          delegate.authorization.update_token!(new_token_pair.to_hash)
-
-          if refresh_token? && delegate.authorization.expired?
-            fetch_access_token
-          end
-        end
+      # Determines if the access token has expired
+      #
+      # If it's 5 minutes before the expiration date, it is considered expired.
+      #
+      # Returns true if expired, false if not
+      def access_token_expired?
+        delegate.authorization.expired?
+        #!!(Time.now >= (Time.at(expires_at) - 5 * 60))
       end
 
       def token_pair
         delegate.authorization
       end
+
+      def refresh_token
+        token_pair.refresh_token
+      end
+
+      def access_token
+        token_pair.access_token
+      end
+
+      def expires_at
+        token_pair.expires_at
+      end
+
+      # The path visited before being redirected to authorization
+      def path_before_signing_in
+        delegate.authorization.state
+      end
+
+      # The following methods are used as part of the initialize dsl
 
       def client_id=(new_client_id)
         delegate.authorization.client_id = new_client_id
@@ -95,18 +113,6 @@ module Caldo
       private
       attr_accessor :delegate
       attr_writer   :calendar
-
-      def refresh_token?
-        delegate.authorization.refresh_token
-      end
-
-      def enable_auto_approval(path)
-        path.gsub("&approval_prompt=force","")
-      end
-
-      def default_options
-        { :scope => 'https://www.googleapis.com/auth/calendar' }
-      end
     end
   end
 end

@@ -12,7 +12,7 @@ module Caldo
         self.location    = attrs.fetch("location", "")
         self.start_date  = attrs["start"]["date"] || attrs["start"]["dateTime"] || ""
         self.end_date    = attrs["end"]["date"]   || attrs["end"]["dateTime"]   || ""
-        self.color_id    = attrs.fetch("colorId", "")
+        self.color_id    = attrs["colorId"] || attrs["color_id"] || ""
       end
 
       # Make the attributes also accessible like a hash for easier initialization
