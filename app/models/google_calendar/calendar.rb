@@ -17,12 +17,38 @@ module Caldo
         { 'calendarId' => 'primary' }
       end
 
+      # Public: Finds a specific event given its ID
+      #
+      # id - A String ID corresponding to a Google Calendar Event ID.
+      #      eg: "0e9ft9c6gk7tm29srrjcupp94c_20120520"
+      #
+      # Returns an Event instance if found, or false if not.
+      def find_event(id)
+        response = send_get_by_id_request(id)
+
+        if response
+          Event.new(response)
+        else
+          false
+        end
+      end
+
+      # Public: Gets a list of events between a given date range.
+      #
+      # params
+      #   :min         - The beginning of a date/time range. A DateTime object.
+      #   :max         - The end of a date/time range. A DateTime object.
+      #   :max_results - Optional, an integer that specifies the maximum number
+      #                  of events to return.
+      #
+      # Returns an Array of Events or an empty Array if no Events were found
+      # in the given date range.
       def find_events_by_date(params)
         response = send_list_request({
-          'timeMin' => format_date(params[:min]),
-          'timeMax' => format_date(params[:max]),
-          'singleEvents' => 'true',
-          'maxResults' => '50'
+          'timeMin'      => format_date(params[:min]),
+          'timeMax'      => format_date(params[:max]),
+          'maxResults'   => params.fetch(:max_results, 50).to_s,
+          'singleEvents' => 'true'
         })
 
         if response
@@ -34,6 +60,19 @@ module Caldo
         end
       end
 
+      # Public: Updates an event with the given attributes
+      #
+      # params
+      #   :id      - The Google Calendar ID for the event.
+      #   :date    - A Date String eg "2012-05-21"
+      #   :color   - A color id as understood by Google Calendar. A String,
+      #              eg: "2" corresponds to a shade of green.
+      #   :summary - A String short description of the Event, eg "Bike 2 miles"
+      #              Some people might call this the title of the Event, but
+      #              I stuck with summary to keep consistent with Google's
+      #              terminology.
+      #
+      # Returns the updated Event instance if successful, false if not.
       def update_event(params)
         response = send_update_request({
           'eventId'   => params[:id],
@@ -66,11 +105,11 @@ module Caldo
         client.execute(
           :api_method => calendar_api.events.get,
           :parameters => default_options.merge('eventId' => id)
-        ).data
+        )
       end
 
       def send_update_request(params)
-        event = find_event(params['eventId'], params['startDate'])
+        event = send_get_by_id_request(params['eventId']).data
 
         event.color_id = params['colorId']
         event.summary  = params['summary'] if params['summary']
@@ -89,10 +128,6 @@ module Caldo
         end
       end
 
-      def find_event(id, start_date = nil)
-        send_get_by_id_request(id)
-      end
-
       # Private: Formats a given Date, Time, or DateTime to the xmlschema
       # standard time format understood by Google Calendar API.
       #
@@ -102,6 +137,13 @@ module Caldo
         date.to_time.xmlschema
       end
 
+      # Private: Converts a Google Calendar API schema object to a hash.
+      #
+      # This is a weird part of the system, not sure how I should handle the
+      # date and datetime - currently I don't care much about them so I just
+      # throw either under the 'date' key.
+      #
+      # Returns a hash or nil if no schema is given.
       def schema_to_hash(schema)
         if schema
           { "id"          => schema.id,
