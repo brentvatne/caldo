@@ -24,10 +24,8 @@ module Caldo
 
     it "has a tokenpair" do
       user.should respond_to(:token_pair)
-      puts user.id
 
       token = TokenPair.create(token_pair_attrs)
-      puts token.id
       user.token_pair = token
       user.token_pair.should == token
       user.token_pair.access_token.should == "123"

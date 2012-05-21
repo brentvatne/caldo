@@ -12,6 +12,10 @@ use OmniAuth::Builder do
           'https://www.googleapis.com/auth/userinfo.email '\
           'https://www.googleapis.com/auth/userinfo.profile'
 
+  # If you ever lose people's refresh tokens for whatever reason, you can
+  # have them login with approval_prompt => 'force' and it will get the
+  # tokens again. 'auto' only gets the refresh token the first time the API 
+  # access is requested.
   provider :google_oauth2,
            Caldo::GAPI_CLIENT_ID,
            Caldo::GAPI_CLIENT_SECRET,

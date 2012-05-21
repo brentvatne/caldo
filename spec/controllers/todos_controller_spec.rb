@@ -11,7 +11,7 @@ describe "Todos actions" do
 
   describe "GET /:date" do
     it "should fetch a list for the date" do
-      Caldo::Todo.expects(:all_on_date).with("2012-01-12").once
+      Caldo::Todo.expects(:all_within_range_of).with("2012-01-12").once
       get '/2012-01-12'
     end
   end

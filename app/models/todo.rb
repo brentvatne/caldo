@@ -29,7 +29,7 @@ module Caldo
       }.sort
     end
 
-    def self.all_within_reasonable_range_of(date)
+    def self.all_within_range_of(date)
       events = service.find_events_by_date(:min => DateTime.parse(date) - 4,
                                            :max => DateTime.parse(date) + 7)
 

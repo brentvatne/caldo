@@ -11,7 +11,7 @@ module Caldo
     get '/today', :authenticates => true do
       date = Date.today.to_s
 
-      todos = Todo.all_within_reasonable_range_of(date).map { |todo|
+      todos = Todo.all_within_range_of(date).map { |todo|
         TodoPresenter.new(todo).to_hash
       }.to_json
 
@@ -21,7 +21,7 @@ module Caldo
     get %r{^\/(\d{4}-\d{2}-\d{2})}, :authenticates => true do
       date = params[:captures].first
 
-      todos = Todo.all_within_reasonable_range_of(date).map { |todo|
+      todos = Todo.all_within_range_of(date).map { |todo|
         TodoPresenter.new(todo).to_hash
       }.to_json
 
@@ -31,7 +31,7 @@ module Caldo
     get '/todos/:date', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 
-      Todo.all_within_reasonable_range_of(params[:date]).map { |todo|
+      Todo.all_within_range_of(params[:date]).map { |todo|
         TodoPresenter.new(todo).to_hash
       }.to_json
     end
