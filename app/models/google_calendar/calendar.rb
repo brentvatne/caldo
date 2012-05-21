@@ -4,6 +4,10 @@ module Caldo
   module GoogleCalendar
     COLORS = { :green => "2", :grey => "8" }
 
+    # The Calendar class wraps Google Calendar API v3 methods / parameters to
+    # provide a more ruby-like interface, and delegates the execution and parsing
+    # of results to the Client class (which in turn delegates to the official
+    # Google Calendar API client).
     class Calendar
       def initialize(api_client)
         self.client = api_client
@@ -13,26 +17,21 @@ module Caldo
         { 'calendarId' => 'primary' }
       end
 
-      def find_event(id, start_date = nil)
-        send_get_by_id_request(id)
-      end
-
       def find_events_by_date(params)
-        min = params[:min]
-        max = params[:max]
-
-        result = send_list_request({
-          'timeMin' => format_date(min),
-          'timeMax' => format_date(max),
+        response = send_list_request({
+          'timeMin' => format_date(params[:min]),
+          'timeMax' => format_date(params[:max]),
           'singleEvents' => 'true',
           'maxResults' => '50'
         })
 
-        return [] if result.nil?
-
-        result.inject([]) { |events, attrs|
-          events << Event.new(attrs) 
-        }
+        if response
+          response.inject([]) { |events, attrs|
+            events << Event.new(attrs)
+          }
+        else
+          []
+        end
       end
 
       def update_event(params)
@@ -57,6 +56,12 @@ module Caldo
         @calendar_api ||= client.discovered_api('calendar', 'v3')
       end
 
+      def send_list_request(params)
+        params.merge!(default_options)
+        client.execute(:api_method => calendar_api.events.list,
+                       :parameters => params).data.to_hash["items"]
+      end
+
       def send_get_by_id_request(id)
         client.execute(
           :api_method => calendar_api.events.get,
@@ -74,20 +79,27 @@ module Caldo
           :api_method  => calendar_api.events.update,
           :parameters  => default_options.merge('eventId' => event.id),
           :body_object => event,
-          :headers => {'Content-Type' => 'application/json'}
+          :headers     => {'Content-Type' => 'application/json'}
         )
 
-        schema_to_hash(response.data) if response
+        if response
+          schema_to_hash(response.data)
+        else
+          false
+        end
       end
 
+      def find_event(id, start_date = nil)
+        send_get_by_id_request(id)
+      end
+
+      # Private: Formats a given Date, Time, or DateTime to the xmlschema
+      # standard time format understood by Google Calendar API.
+      #
+      # Returns the date and time of the passed in object as a string
+      # formatted according to XML schema: eg: "2012-05-21T13:19:08-07:00"
       def format_date(date)
         date.to_time.xmlschema
-      end
-
-      def send_list_request(params)
-        params.merge!(default_options)
-        client.execute(:api_method => calendar_api.events.list,
-                       :parameters => params).data.to_hash["items"]
       end
 
       def schema_to_hash(schema)

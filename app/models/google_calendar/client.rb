@@ -4,8 +4,37 @@ module Caldo
   module GoogleCalendar
     class NoRefreshToken < StandardError; end
 
+    # This class is a wrapper for the official Google API Client class to make
+    # it easier to work with. It's responsibility is to ensure that the access
+    # token is in a valid state and always able to make requests.
+    #
+    # In order to initialize it:
+    #
+    #   token_pair = TokenPair.first(:id => 1)
+    #   service = GoogleCalendar::Client.new do |c|
+    #     c.client_id     = GAPI_CLIENT_ID
+    #     c.client_secret = GAPI_CLIENT_SECRET
+    #     c.token_pair    = token_pair
+    #   end
+    #
+    # TokenPair is a class whose instances respond to:
+    #   refresh_token - A string corresponding to a Calendar API refresh token.
+    #   access_token  - A string corresponding to a Calendar API access token.
+    #   expires_at    - An integer that represents the time when the access
+    #                   token expires. (eg: Time.now.to_i)
+    #
+    # The client itself is not very useful beyond proxying the execute method.
+    # The Calendar class, which you can access through the calendar method on an
+    # instance of Client, wraps other Calendar API methods for easier access.
+    #
+    # Returns an instance of the Client class
     class Client
       attr_reader :calendar
+
+      def self.configure(*args, &block)
+        client = new(*args, &block)
+        client.calendar
+      end
 
       def initialize
         self.delegate = Google::APIClient.new
@@ -15,10 +44,13 @@ module Caldo
         self.calendar = Calendar.new(self)
       end
 
+      # Public: Delegate any undefined methods to the delegate object, which
+      # is an instance of the official Google API Client class
       def method_missing(method, *args, &block)
         delegate.send(method, *args, &block)
       end
 
+      # Public: 
       def execute(*args)
         if access_token_expired?
           get_fresh_access_token
@@ -55,12 +87,9 @@ module Caldo
 
       # Determines if the access token has expired
       #
-      # If it's 5 minutes before the expiration date, it is considered expired.
-      #
       # Returns true if expired, false if not
       def access_token_expired?
         delegate.authorization.expired?
-        #!!(Time.now >= (Time.at(expires_at) - 5 * 60))
       end
 
       def token_pair
