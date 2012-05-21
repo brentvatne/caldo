@@ -1,5 +1,4 @@
 require 'google/api_client'
-require 'debugger'
 
 module Caldo
   module GoogleCalendar
