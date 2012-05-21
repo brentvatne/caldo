@@ -11,6 +11,8 @@ gem 'thin'
 gem 'coffee-script'
 gem 'therubyracer'
 
+gem 'debugger', group: [:development, :test]
+
 # Assets
 gem 'sass', '~> 3.1.14'
 

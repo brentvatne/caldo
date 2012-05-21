@@ -14,7 +14,7 @@ module TimeSpecHelpers
   # Requires a client method to be set in current context
   # eg: let(:client) { Client.new }
   def token_expiration_is(time)
-    client.token_expiration = Time.parse(time)
+    client.stub(:token_expiration).and_returns(Time.parse(time))
   end
 end
 

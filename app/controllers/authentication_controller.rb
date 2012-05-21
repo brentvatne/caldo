@@ -1,7 +1,6 @@
 require_relative '../app'
 require_relative '../models/google_calendar/client'
 require_relative '../models/google_calendar/calendar'
-require_relative '../models/google_calendar/throttler'
 
 module Caldo
   class App < Sinatra::Application
@@ -30,7 +29,7 @@ module Caldo
     # Logs the user out by reseting the session token information. Does not
     # delete their token key from the database.
     get '/sign_out' do
-      session[:uid]  = nil
+      session[:uid]  = ""
       flash[:notice] = "You have been signed out! See you again soon."
       redirect to('/')
     end
@@ -47,7 +46,7 @@ module Caldo
     # or initiates the authroization process if the user is not already
     # authorized
     def authenticate
-      if user_logged_in?
+      if user_has_session_cookie? and user_in_database?
         Thread.current['uid'] = session[:uid]
       else
         unless authentication_in_progress?
@@ -56,14 +55,17 @@ module Caldo
       end
     end
 
-    def user_logged_in?
+    def user_has_session_cookie?
       !!session[:uid]
     end
 
-    # Returns TokenPair instance from the session or returns nil
-    def session_token_pair
-      if user = User.first(:email => session[:uid])
-        user.token_pair
+    def user_in_database?
+      current_user
+    end
+
+    helpers do
+      def current_user
+        @current_user ||= User.first(:email => session[:uid])
       end
     end
 

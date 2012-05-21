@@ -10,13 +10,25 @@ module Caldo
     property :email, String, :unique => true
 
     def self.find_or_create_from_omniauth(params)
-      first_or_create({:email => params['info']['email']}, {
-        :token_pair => TokenPair.create(params['credentials'])
-      })
+      email = params['info']['email']
+
+      if user = first(:email => email)
+        user
+      else
+        credentials = params['credentials']
+
+        create(:email => email,
+               :token_pair => TokenPair.create(credentials))
+      end
     end
 
     def self.token_pair_for(email)
       first(:email => email).token_pair
+    end
+
+    def update_token(params)
+      token_pair.update_token(params)
+      save
     end
   end
 end

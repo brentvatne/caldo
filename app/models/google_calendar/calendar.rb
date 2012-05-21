@@ -30,7 +30,9 @@ module Caldo
 
         return [] if result.nil?
 
-        result.inject([]) { |events, attrs| events << Event.new(attrs) }
+        result.inject([]) { |events, attrs|
+          events << Event.new(attrs) 
+        }
       end
 
       def update_event(params)
