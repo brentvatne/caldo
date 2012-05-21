@@ -1,4 +1,7 @@
 class Todos extends Backbone.Collection
+
+  url: () -> '/todos/' + @date
+
   initialize: ->
     @on 'reset', @updateLastFetchDate, this
 
@@ -15,8 +18,6 @@ class Todos extends Backbone.Collection
 
   important: ->
     _.filter @models, (todo) -> todo.isImportant()
-
-  url: () -> '/todos/' + @date
 
   setDate: (@date) ->
     @trigger 'change:date'

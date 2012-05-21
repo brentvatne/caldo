@@ -36,11 +36,10 @@ module Caldo
       }.to_json
     end
 
-    put '/todos/:date/:id', :authenticates => true do
+    put '/todos/:id', :authenticates => true do
       content_type 'application/json', :charset => 'utf-8'
 
-      record = JSON.parse(request.body.read).symbolize_keys!
-      todo = Todo.update(record)
+      todo = Todo.update(json_params)
       TodoPresenter.new(todo).to_hash.to_json
     end
   end
