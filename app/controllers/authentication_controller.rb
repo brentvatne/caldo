@@ -6,14 +6,6 @@ module Caldo
   class App < Sinatra::Application
     attr_accessor :client, :calendar
 
-    # Should deal with an edge case:
-    # If the user does not have a refresh token, and no refresh
-    # token was given, should redirect to auth with force
-    #
-    # The problem is I need to get the url from Omniauth and modify
-    # it to include approval_prompt=force, and here I should update it
-    # (this last bit, updating refresh token, will require some more
-    # code on the user in the find or create from omniauth method)
     get '/auth/:provider/callback' do
       user          = User.find_or_create_from_omniauth(omniauth_params)
       session[:uid] = user.email

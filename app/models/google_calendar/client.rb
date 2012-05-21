@@ -20,17 +20,19 @@ module Caldo
         delegate.send(method, *args, &block)
       end
 
+      def execute(*args)
+        if access_token_expired?
+          get_fresh_access_token
+        end
+
+        delegate.send(:execute, *args)
+      end
+
       # Set the local Client token pair values and update them if
       # necessary (and possible)
       def token_pair=(tokens)
         if tokens
-          puts tokens.inspect
-
           delegate.authorization.update_token!(tokens.to_hash)
-
-          if access_token_expired?
-            get_fresh_access_token
-          end
         end
       end
 
