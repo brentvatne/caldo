@@ -7,17 +7,36 @@ class AppView extends Backbone.View
     @date       = @options['date']
     preloadData = @options['preloadData']
 
-    @setDate(@date, silent: true)
+    @initializeDate()
     @render()
+    @enableKeyboardScrolling()
 
     @collection.on 'reset', @showTodos, this
-    @enableKeyboardScrolling()
+    @collection.on 'reset', @hideLoading, this
     new Caldo.TodosView(collection: @collection, app: this)
     if preloadData then @collection.reset(preloadData) else @collection.fetch()
 
+
+
   events:
-    "click a.next-day":     "navigateToNextDay"
-    "click a.previous-day": "navigateToPreviousDay"
+    "click .next-day":     "navigateToNextDay"
+    "click .previous-day": "navigateToPreviousDay"
+    "click .sync-button":  "synchronizeTodos"
+
+  initializeDate: () ->
+    @setDate(@date, silent: true)
+    @collection.date = @date
+
+  synchronizeTodos: (e) ->
+    @displayLoading()
+    @collection.fetch()
+
+  displayLoading: ->
+    $('.sync-button').addClass('spinning')
+
+  hideLoading: ->
+    $('.sync-button').removeClass('spinning')
+
 
   navigateToNextDay: (e) ->
     e?.preventDefault()

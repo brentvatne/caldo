@@ -20,6 +20,42 @@ body {
   }
 }
 
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.spinning {
+  -webkit-animation-name:             rotate;
+  -webkit-animation-duration:         0.5s;
+  -webkit-animation-iteration-count:  infinite;
+  -webkit-transition-timing-function: linear;
+}
+
+.date-header {
+  .date {
+    display: inline-block;
+  }
+  .sync-button-wrapper {
+    display: inline-block;
+    padding-left: 10px;
+    .sync-button {
+      opacity: 0.5;
+      width: 20px;
+      height: 20px;
+      &:hover {
+        opacity: 1;
+        cursor: hand;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
 .wrap {
   width: 400px;
   margin: 0 auto;

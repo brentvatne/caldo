@@ -1,5 +1,10 @@
 <script type="text/template" id="caldo-app-template">
-  <h1 class="date"><%= Caldo.Util.humanDate(date) %></h1>
+  <div class="date-header">
+    <h1 class="date"><%= Caldo.Util.humanDate(date) %></h1>
+    <span class="sync-button-wrapper">
+      <img src="/images/icons/sync.svg" class="sync-button" alt="refresh">
+    </span>
+  </div>
   <div class="todos-wrapper">
     <!-- todo list goes here -->
   </div>
